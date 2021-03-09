@@ -1,22 +1,60 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
+import { fetchAction } from '../../helpers/fetch'
+import { useForm } from '../../hooks/useForm'
+import { Button } from '../Button'
+import { Input } from '../Input'
+
 export const LoginScreen = () => {
+
+    const [formValues, handleInputChange, reset]=useForm({
+        email: '',
+        password: ''
+    })
+
+    const {email,password} = formValues;
+
+    const handleLogin = async(e) => {
+        e.preventDefault();
+        reset();
+        const res = await fetchAction('users',{ email, password}, 'POST');
+        const data = await res.json();
+        console.log(data);
+    };
+
     return (
         <div className="row">
             <div className="col-12">
                 <p className="p-0 m-0 display-1 text-center mt-5 font fw-bold">Login</p>
             </div>
             <div className="col-lg-6 col-11 mt-5 mx-auto rounded p-4 bg-option">
-                <form>
+                <form onSubmit={handleLogin}>
                     <div className="mb-3">
-                        <label htmlFor="exampleInputEmail1" className="form-label">Email address</label>
-                        <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" />
+                        
+                
+                        <Input 
+                            type={"text"} 
+                            id={"txt01"} 
+                            name={"email"}
+                            label={"Email address:"} 
+                            clase={"form-control"} 
+                            value={email} 
+                            onChange={handleInputChange} 
+                        />
+
                         <div id="emailHelp" className="form-text">We'll never share your email with anyone else.</div>
                     </div>
                     <div className="mb-3">
-                        <label htmlFor="exampleInputPassword1" className="form-label">Password</label>
-                        <input type="password" className="form-control" id="exampleInputPassword1" />
+                        <Input 
+                            type={"password"} 
+                            id={"txt02"} 
+                            name={"password"}
+                            label={"Password:"}  
+                            clase={"form-control"} 
+                            value={password} 
+                            onChange={handleInputChange} 
+                        />
                     </div>
                     <div className="row my-4 font">
                         <div className="col text-end">
@@ -25,8 +63,18 @@ export const LoginScreen = () => {
                     </div>
                     <div className="row">
                         <div className="col d-lg-flex justify-content-between">
-                            <button type="submit" className="btn btn-primary w-100 mx-1 my-2 py-3">Login with app</button>
-                            <button type="submit" className="btn btn-light w-100 mx-1 my-2 py-3 d-flex justify-content-center align-items-center"><i className="fab fa-google fs-3"></i><span className="mx-3">Sing in with google</span></button>
+                            <Button 
+                                type={"submit"}
+                                clase={"btn btn-primary w-100 mx-1 my-2 py-3"}
+                                texto={"Login with app"}
+                                //icono={} 
+                            />
+                            <Button 
+                                type={"submit"}
+                                clase={"btn btn-light w-100 mx-1 my-2 py-3 d-flex justify-content-center align-items-center"}
+                                texto={"Sing in with google"}
+                                icono={"fab fa-google fs-3 mx-3"} 
+                            />
                         </div>
                     </div>
                 </form>

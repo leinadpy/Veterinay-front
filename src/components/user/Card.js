@@ -1,4 +1,5 @@
 import React from 'react'
+import { Button } from '../Button'
 
 export const Card = ({user}) => {
     return (
@@ -15,7 +16,12 @@ export const Card = ({user}) => {
             <div className="card-body">
                 <h5 className="card-title">Titulo:</h5>
                 <p className="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cum, ea...</p>
-                <button className={`${(user==="admin" ? "btn-outline-info" : "btn-dark") } btn w-100 py-2`}>Show</button>
+                <Button 
+                    clase={`${(user==="admin" ? "btn-outline-info" : "btn-dark") } btn w-100 py-2`}
+                    texto={"Show"}
+                    //icono={}
+                    //evento={} 
+                />
             </div>
             <div className="card-footer text-muted">
                 <div className="row  d-flex justify-content-between align-items-center">
