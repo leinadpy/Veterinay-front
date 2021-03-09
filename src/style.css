@@ -1,0 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@100;400;700&display=swap');
+
+.font{
+    font-family: 'Raleway', sans-serif;
+}
+.bg-option{
+    background: #324a58;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #292E49, #2e363b);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #292E49, #2e363b);  
+}
+
+.pointer{
+    cursor: pointer;
+}
+
+
+.isCheck:checked + .none{
+    background-color: red;
+}
+
+.flex{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
