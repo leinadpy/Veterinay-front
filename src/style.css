@@ -23,3 +23,23 @@
     justify-content: space-around;
     align-items: center;
 }
+
+.contenedor_cards{
+    height: 80vh;
+    overflow: hidden;
+    overflow-y: scroll;
+    scrollbar-width: none;
+}
+
+.box:hover, .box:hover + p{
+    transition: all .2s ease;
+    color: rgb(175, 172, 172);
+}
+.box:hover + p{
+    font-size: 20px;
+}
+.box_alt{
+    height: 35%;
+    display:grid;
+    grid-template-rows: 1fr 1fr ;
+}
