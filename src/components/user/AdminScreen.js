@@ -1,9 +1,29 @@
 import React from 'react'
+import { Card } from './Card';
 
 export const AdminScreen = () => {
+    
+    const n = [1,2,3,4,5,6,7];
+
     return (
-        <div>
-            admin
-        </div>
+        <>
+            <div className="row p-2">
+                <h2 className="text-end"><u className="fs-5 fw-bold text-warning font">Veterinaria Pets</u></h2>
+                <div className="col-12 text-start display-5 fw-bold border-bottom">Citas agendadas</div>
+            </div>
+            <div className="row">
+                <div className="col-12">
+                    <div className="row contenedor_cards">
+                        {
+                            n.map(card=>(
+                                <div className="col-4 mt-3" key={card}>
+                                    <Card user="admin" />
+                                </div>
+                            ))
+                        }
+                    </div>
+                </div>
+            </div>
+        </>
     )
 }

@@ -23,7 +23,7 @@ export const UserScreen = () => {
                         {
                             n.map(card=>(
                                 <div className="col-4 mt-3" key={card}>
-                                    <Card />
+                                    <Card user="normal" />
                                 </div>
                             ))
                         }

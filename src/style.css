@@ -29,6 +29,11 @@
     overflow: hidden;
     overflow-y: scroll;
     scrollbar-width: none;
+    padding-top: 20px;
+    padding-bottom: 100px;
+}
+.contenedor_cards::-webkit-scrollbar{
+    display: none;
 }
 
 .box:hover, .box:hover + p{
@@ -42,4 +47,7 @@
     height: 35%;
     display:grid;
     grid-template-rows: 1fr 1fr ;
+}
+textarea{
+    resize: none;
 }

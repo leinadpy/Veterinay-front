@@ -1,15 +1,21 @@
 import React from 'react'
 
-export const Card = () => {
+export const Card = ({user}) => {
     return (
         <div className="card text-center text-dark">
             <div className="card-header">
-            <p className="p-0 m-0 fw-bold">Veterinary</p>
+            <p className="p-0 m-0 fw-bold">
+                {
+                    (user==="admin")
+                        ? "Nombre del usuario"
+                        : "Nombre de la veterinaria"
+                }
+            </p>
             </div>
             <div className="card-body">
                 <h5 className="card-title">Titulo:</h5>
                 <p className="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cum, ea...</p>
-                <button className="btn btn-dark w-100">Show</button>
+                <button className={`${(user==="admin" ? "btn-outline-info" : "btn-dark") } btn w-100 py-2`}>Show</button>
             </div>
             <div className="card-footer text-muted">
                 <div className="row  d-flex justify-content-between align-items-center">
