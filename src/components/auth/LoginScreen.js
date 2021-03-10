@@ -1,6 +1,8 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 
+import { alertPopUp } from '../../helpers/alert'
+import { googleAuthProvider,firebase } from '../../firebase/firebase-config'
 import { fetchAction } from '../../helpers/fetch'
 import { useForm } from '../../hooks/useForm'
 import { Button } from '../Button'
@@ -18,9 +20,19 @@ export const LoginScreen = () => {
     const handleLogin = async(e) => {
         e.preventDefault();
         reset();
-        const res = await fetchAction('users',{ email, password}, 'POST');
-        const data = await res.json();
-        console.log(data);
+        const res = await fetchAction(`Usuario/${email}&${password}`);
+        const {data, exito, mensaje} = await res.json();
+        if(exito){
+            alertPopUp('success', 'Inicio de sesión correcto', null, 'animate__animated animate__bounce', 'animate__animated animate__backOutDown', false, 1500);
+        }else{
+            alertPopUp('error', 'Upps...', mensaje, 'animate__animated animate__bounce', 'animate__animated animate__backOutDown', true, null);
+        }
+    };
+
+    const handleLoginGoogle = async(e) => {
+        e.preventDefault();
+        const userCard = await firebase.auth().signInWithPopup(googleAuthProvider);
+        console.log(userCard)
     };
 
     return (
@@ -73,7 +85,8 @@ export const LoginScreen = () => {
                                 type={"submit"}
                                 clase={"btn btn-light w-100 mx-1 my-2 py-3 d-flex justify-content-center align-items-center"}
                                 texto={"Sing in with google"}
-                                icono={"fab fa-google fs-3 mx-3"} 
+                                icono={"fab fa-google fs-3 mx-3"}
+                                evento={handleLoginGoogle} 
                             />
                         </div>
                     </div>
