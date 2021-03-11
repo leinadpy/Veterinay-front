@@ -1,6 +1,6 @@
 
 
-export const fetchAction = (endpoint, data, method='GET') => {
+export const fetchAction = (endpoint, method='GET',data ) => {
     
     const url = `https://localhost:5001/${endpoint}`;
 
