@@ -4,6 +4,7 @@ import { Input } from '../Input';
 
 export const ShowCardScreen = ({history,user}) => {
 
+    
 
     const handleBack = (e) => {
          e.preventDefault();

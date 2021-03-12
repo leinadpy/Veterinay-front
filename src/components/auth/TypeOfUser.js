@@ -1,14 +1,66 @@
 import React from 'react'
+import { alertPopUp } from '../../helpers/alert';
+import { fetchAction } from '../../helpers/fetch';
 import { Button } from '../Button';
 
-export const TypeOfUser = ({history}) => {
+export const TypeOfUser = ({ history }) => {
 
-    const handleTypeUser = (user) => {
-         if(user ==="normal"){
-            history.replace('/register/normal') 
-        }else{
-            history.replace('/register/admin') 
-         }
+    const dataUser = JSON.parse(localStorage.getItem('data')) || 0;
+
+    const handleTypeUser = async (user) => {
+        if (user === "normal") {
+
+            if (dataUser === 0) {
+
+                history.replace('/register/normal')
+            } else {
+
+                const { displayName: nombre, email, photoURL, uid: password } = dataUser;
+                const isAdmin= false;
+                const imagenUrl = photoURL.replaceAll('/', '*');
+
+                const res = await fetchAction(`Usuario/crear-cuenta-google/${email}/${nombre}/${isAdmin}/${imagenUrl}/${password}`, 'POST',
+                    { nombre, email, password, isAdmin, imagenUrl });
+
+                const { exito, data, mensaje } = await res.json();
+
+                console.log(data);
+
+                if (exito) {
+
+                    alertPopUp(
+                        "success",
+                        "Inicio de sesión correcto",
+                        mensaje,
+                        "animate__animated animate__bounce",
+                        "animate__animated animate__backOutDown",
+                        false,
+                        1000
+                    );
+
+                    localStorage.clear();
+
+                    setTimeout(() => {
+                        history.replace('/user')
+                        localStorage.setItem('user-login',data.id_usuario );
+                    }, 1000);
+
+                } else {
+                    alertPopUp(
+                        "error",
+                        "Upps...",
+                        "No se logro crear la cuenta",
+                        "animate__animated animate__bounce",
+                        "animate__animated animate__backOutDown",
+                        true,
+                        null
+                    );
+                }
+            }
+
+        } else {
+            history.replace('/register/admin')
+        }
     };
 
     return (
@@ -20,24 +72,24 @@ export const TypeOfUser = ({history}) => {
             </div>
             <div className="row my-3 flex mt-5 px-3">
                 <div className="col-lg-5 col-12 mt-3 mt-lg-0 bg-option rounded text-center">
-                    <img src="./assets/dog2.svg" className="w-100"  alt=""/>                   
-                    <Button 
+                    <img src="./assets/dog2.svg" className="w-100" alt="" />
+                    <Button
                         clase={"btn btn-primary w-100 py-3 my-3"}
                         texto={"Normal user"}
                         //icono={}
-                        evento={()=>{handleTypeUser("normal")}} 
+                        evento={() => { handleTypeUser("normal") }}
                     />
                 </div>
                 <div className="col-lg-5 col-12 mt-3 mt-lg-0 bg-option rounded text-center">
-                    <img src="./assets/dog.svg"  className="w-100" alt=""/>   
-                    <Button 
+                    <img src="./assets/dog.svg" className="w-100" alt="" />
+                    <Button
                         clase={"btn btn-primary w-100 py-3 my-3"}
                         texto={"Veterinarian"}
                         //icono={}
-                        evento={()=>{handleTypeUser("admin")}} 
+                        evento={() => { handleTypeUser("admin") }}
                     />
                 </div>
-            </div>   
+            </div>
         </>
     )
 }
