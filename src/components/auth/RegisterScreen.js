@@ -63,14 +63,14 @@ export const RegisterScreen = ({ history }) => {
 
         if (id_usuario && type === 'admin') {
 
-            res = await fetchAction(`Lugar`, 'POST',
+            const respVeterinaria = await fetchAction(`Lugar`, 'POST',
                 { nombre_veterinaria, direccion, id_usuario });
 
-            data = await res.json();
-            console.log(data);
+            const dataVeterinaria = await respVeterinaria.json();
+            console.log(dataVeterinaria);
         }
 
-        if (data.exito) {
+        if (data.exito ) {
             reset();
             alertPopUp(
                 "success",
@@ -81,18 +81,18 @@ export const RegisterScreen = ({ history }) => {
                 false,
                 1000
             );
-
-            if ((type === "normal" && !data.data.isAuthGoogle) || (type === "admin" && !data.data.isAuthGoogle)) {
+                console.log(data)
+            if ((type === "normal" && !data.data?.isAuthGoogle) || (type === "admin" && !data.data?.isAuthGoogle)) {
                 setTimeout(() => {
                     history.replace('/login');
-                    localStorage.setItem('user-login',data.data.id_usuario );
+                    localStorage.setItem('user-login',id_usuario );
                 }, 1000);
 
             } else {
 
                 setTimeout(() => {
                     history.replace('/admin');
-                    localStorage.setItem('user-login',data.data.id_usuario );
+                    localStorage.setItem('user-login',id_usuario );
                 }, 1000);
             }
 

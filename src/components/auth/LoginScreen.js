@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 
 import { alertPopUp } from "../../helpers/alert";
@@ -7,8 +7,12 @@ import { fetchAction } from "../../helpers/fetch";
 import { useForm } from "../../hooks/useForm";
 import { Button } from "../Button";
 import { Input } from "../Input";
+import { AuthContext } from "../../auth/AuthContext";
 
-export const LoginScreen = ({history}) => {
+export const LoginScreen = ({ history }) => {
+  
+  const {dispatch} = useContext(AuthContext);
+  
   const [formValues, handleInputChange, reset] = useForm({
     email: "",
     password: "",
@@ -16,10 +20,12 @@ export const LoginScreen = ({history}) => {
 
   const { email, password } = formValues;
 
+
+
   const handleLogin = async (e) => {
     e.preventDefault();
     // console.log({email, password}); return;
-    const res = await fetchAction(`Usuario/login/${email}&${password}`,'POST',{email, password});
+    const res = await fetchAction(`Usuario/login/${email}&${password}`, 'POST', { email, password });
     const { exito, mensaje, data } = await res.json();
     if (exito) {
       alertPopUp(
@@ -33,9 +39,19 @@ export const LoginScreen = ({history}) => {
       );
 
       setTimeout(() => {
-        if(data.isAdmin) history.replace('/admin')
+        dispatch({
+          type: 'login',
+          payload:{
+            id: data.id_usuario,
+            admin: data.isAdmin
+          }
+        })
+      }, 1800);
+
+      setTimeout(() => {
+        if (data.isAdmin) history.replace('/admin')
         else history.replace('/user')
-        localStorage.setItem('user-login',data.id_usuario );
+        localStorage.setItem('user-login', data.id_usuario);
       }, 1500);
 
     } else {
@@ -62,23 +78,20 @@ export const LoginScreen = ({history}) => {
         displayName,
         email,
         photoURL,
-        uid,
+        uid,  
       };
 
-      
+
 
       const res = await fetchAction(
         `Usuario/login-google/${email}`,
         "POST",
-        {email}
+        { email }
       );
 
 
-      const { exito, mensaje, data:{ id_usuario,isAdmin } } = await res.json();
+      const { exito, mensaje, data } = await res.json();
 
-
-  
-      
       if (exito) {
 
         reset();
@@ -94,9 +107,19 @@ export const LoginScreen = ({history}) => {
         );
 
         setTimeout(() => {
-          localStorage.setItem('user-login',id_usuario );
+          dispatch({
+            type: 'login',
+            payload:{
+              id: data.id_usuario,
+              admin: data.isAdmin
+            }
+          })
+        }, 1800);
 
-          if(isAdmin){
+        setTimeout(() => {
+          localStorage.setItem('user-login', data.id_usuario);
+
+          if (data.isAdmin) {
             history.replace('/admin')
           }
           else {
@@ -116,6 +139,7 @@ export const LoginScreen = ({history}) => {
       console.log(error);
     }
   };
+
 
   return (
     <div className="row">
@@ -164,7 +188,7 @@ export const LoginScreen = ({history}) => {
                 type={"submit"}
                 clase={"btn btn-primary w-100 mx-1 my-2 py-3"}
                 texto={"Login with app"}
-                //icono={}
+              //icono={}
               />
               <Button
                 type={"submit"}

@@ -14,6 +14,8 @@ export const fetchAction = (endpoint, method='GET',data ) => {
         body: JSON.stringify(data)
     }
 
+    // console.log(url)
+
     if(method=== 'GET'){
 
         return fetch(url);
