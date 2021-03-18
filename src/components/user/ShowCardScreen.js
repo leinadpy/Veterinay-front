@@ -1,31 +1,62 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router';
-import { alertPopUp } from '../../helpers/alert';
+import { Redirect, useParams } from 'react-router';
+import validator from 'validator';
+import { alertPopUp, ToastPopUp } from '../../helpers/alert';
 import { fetchAction } from '../../helpers/fetch';
-import { getUserById } from '../../helpers/getUserById';
 import { getVeterinariaById } from '../../helpers/getVeterinariaById';
 import { getVeterinarias } from '../../helpers/getVeterinarias';
 import { useForm } from '../../hooks/useForm';
 import { Button } from '../Button';
 import { Input } from '../Input';
+import { MapaScreen } from '../mapa/MapaScreen';
 
 export const ShowCardScreen = ({ history }) => {
+
+    const { type } = useParams();
+    const {admin} = JSON.parse(localStorage.getItem('user')) || -1;
+
+
+    if (admin === true && type === 'admin') {
+
+        console.log('ok eres admin y estas en url admin')
+
+    } else if (admin === false && type === 'admin') {
+
+        return <Redirect to={'/user'} /> //no eres admin y quieres entrar a la url admin
+
+    } else if (admin === false && type === 'normal') {
+
+        console.log('ok eres user nomral y estas en url de user normal')
+
+    } else if (admin === true && type === 'normal') {
+
+        return <Redirect to={'/admin'}/> //eres admin y quieres entrar a la url user normal
+
+    } else if (admin === true && type !== 'admin') {
+
+        return  <Redirect to={'/admin'}/>
+
+    } else if (admin === false && type !== 'normal') {
+
+        return <Redirect to={'/user'}/>
+    }
 
 
     const id_usuario = localStorage.getItem('user-login') || -1;
     const data_cita = JSON.parse(localStorage.getItem('data-cita')) || -1;
+    const user_cita = JSON.parse(localStorage.getItem('id-user-cita')) || -1;
+    const username = JSON.parse(localStorage.getItem('id-user-cita')) || -1;
 
-    const { type } = useParams();
 
     const [listVeterinary, setListVeterinary] = useState([]);
     const [id_veteriniaria, setVeterinariaId] = useState(0);
     const [nameVeterinaria, setNameVeterinaria] = useState('')
+    const [coordenadas, setCoordenadas] = useState([])
     const [bandera, setBandera] = useState(true);
-    const [username, setUsername] = useState('usuario')
 
     const [formValues, handleInputChange] = useForm({
         titulo: data_cita?.titulo || '',
-        nombre_mascota: data_cita?.nombre_mascota ||data_cita?.mascota || '',
+        nombre_mascota: data_cita?.nombre_mascota || data_cita?.mascota || '',
         tipo_animal: data_cita?.tipo_animal || data_cita?.mascota || '',
         fecha_cita: data_cita?.fecha_cita || data_cita?.fecha || '',
         hora_cita: data_cita?.hora_cita || data_cita?.hora || '',
@@ -59,47 +90,25 @@ export const ShowCardScreen = ({ history }) => {
     }, [type, data_cita?.id_veteriniaria])
 
 
-    useEffect(() => {
-
-        getUserById(id_usuario).then(({ data }) => {
-
-            setUsername(data.nombre)
-
-            if (data.isAdmin === true && type === 'admin') {
-
-                console.log('ok eres admin y estas en url admin')
-
-            } else if (data.isAdmin === false && type === 'admin') {
-
-                history.replace('/user') //no eres admin y quieres entrar a la url admin
-
-            } else if (data.isAdmin === false && type === 'normal') {
-
-                console.log('ok eres user nomral y estas en url de user normal')
-
-            } else if (data.isAdmin === true && type === 'normal') {
-
-                history.replace('/admin') //eres admin y quieres entrar a la url user normal
-
-            } else if (data.isAdmin === true && type !== 'admin') {
-
-                history.replace('/admin')
-
-            } else if (data.isAdmin === false && type !== 'normal') {
-
-                history.replace('/user')
-            }
-        })
-    }, [id_usuario, type, history])
 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+
         if (type === 'normal' && data_cita !== -1) { // va a actualizar
-
-
             const id_v = (bandera) ? data_cita.id_veteriniaria : id_veteriniaria;
+            
+            if(!isFormValid(id_v)){
+                return;
+            }
+
+            if(!id_v){
+
+                ToastPopUp('error', 'Selecciona una veterinaria')
+                return 
+            }
+
 
             console.log('fetch para ACTUALIZAR cita');
             const data = {
@@ -114,7 +123,7 @@ export const ShowCardScreen = ({ history }) => {
                 id_veteriniaria: id_v
             }
 
-            const res = await fetchAction(`Cita/${data_cita.id_cita}`,'PUT', data);
+            const res = await fetchAction(`Cita/${data_cita.id_cita}`, 'PUT', data);
             const dataChange = await res.json();
 
             if (dataChange?.exito) {
@@ -127,13 +136,22 @@ export const ShowCardScreen = ({ history }) => {
                     false,
                     1500
                 );
-                localStorage.setItem('data-cita', null)
+                localStorage.removeItem('data-cita')
                 history.replace('/user')
 
             }
 
 
         } else if (type === 'normal' && data_cita === -1) { //va a crear una cita
+
+            if(!isFormValid() ){
+                return;
+            }
+            if(id_veteriniaria===0){
+
+                ToastPopUp('error', 'Selecciona una veterinaria')
+                return 
+            }
 
             console.log('fetch para CREAR cita');
             const res = await fetchAction('Cita', 'POST', {
@@ -169,9 +187,9 @@ export const ShowCardScreen = ({ history }) => {
             const aceptada = 1;
             const id_cita = data_cita.id_cita;
 
-            const res = await fetchAction(`Cita/cita/${id_cita}&${aceptada}`,'PUT',{id_cita,aceptada});
+            const res = await fetchAction(`Cita/cita/${id_cita}&${aceptada}`, 'PUT', { id_cita, aceptada });
             const data = await res.json();
-            
+
             if (data.exito) {
                 alertPopUp(
                     "success",
@@ -183,7 +201,7 @@ export const ShowCardScreen = ({ history }) => {
                     1500
                 );
                 history.replace('/admin');
-                localStorage.setItem('user-login', null);
+                localStorage.removeItem('data-cita')
             }
 
         }
@@ -192,14 +210,14 @@ export const ShowCardScreen = ({ history }) => {
 
     const handleDelete = async (e) => {
         e.preventDefault();
-       
-        if(type === 'normal' && data_cita !== -1){
+
+        if (type === 'normal' && data_cita !== -1) {
             console.log('eliminando...');
             const id = data_cita.id_cita;
-    
+
             const resDelte = await fetchAction(`Cita/${id}`, 'DELETE', { id });
             const dataEle = await resDelte.json();
-    
+
             if (dataEle.exito) {
                 alertPopUp(
                     "success",
@@ -210,20 +228,20 @@ export const ShowCardScreen = ({ history }) => {
                     false,
                     1500
                 );
-                localStorage.setItem('data-cita', null)
+                localStorage.removeItem('data-cita')
                 history.replace('/user')
 
             }
-        }else if(type === 'admin' && data_cita !== -1){
+        } else if (type === 'admin' && data_cita !== -1) {
 
             console.log('fetch para RECHAZAR cita');
 
             const aceptada = 2;
             const id_cita = data_cita.id_cita;
 
-            const res = await fetchAction(`Cita/cita/${id_cita}&${aceptada}`,'PUT',{id_cita,aceptada});
+            const res = await fetchAction(`Cita/cita/${id_cita}&${aceptada}`, 'PUT', { id_cita, aceptada });
             const data = await res.json();
-            
+
             if (data.exito) {
                 alertPopUp(
                     "success",
@@ -235,7 +253,7 @@ export const ShowCardScreen = ({ history }) => {
                     1500
                 );
                 history.replace('/admin');
-                localStorage.setItem('user-login', null);
+                localStorage.removeItem('data-cita')
             }
         }
 
@@ -245,29 +263,57 @@ export const ShowCardScreen = ({ history }) => {
         setBandera(false)
     };
 
+    const handleLocation = async (e) => {
+        setVeterinariaId(e.target.value);
 
+        const { data: { direccion } } = await getVeterinariaById(e.target.value)
+
+        const url_mapbox = `https://api.mapbox.com/geocoding/v5/mapbox.places/${direccion}.json?autocomplete=true&language=es&access_token=pk.eyJ1IjoiZnJhbmtvMzYxIiwiYSI6ImNrbWJhbGU2dTFnbjEydm51eDY3M2c2NXEifQ.oJmUO9i2jcaLd0EpkWnhmQ`;
+
+        const data = await fetch(url_mapbox);
+        const res = await data.json();
+        console.log(res.features[0].center)
+        localStorage.setItem('location', JSON.stringify(res.features[0].center));
+        setCoordenadas(res.features[0].center)
+    };
+
+    const isFormValid = (flag) => {
+        
+        if (validator.isIn('', [titulo,nombre_mascota,tipo_animal,fecha_cita,hora_cita,situacion])) {
+
+            ToastPopUp('error', 'Todos los campos son obligatorios')
+            return false;
+        }
+        return true;
+
+    };
 
     return (
         <div className="row">
             <div className="col-12">
-                <p className="p-0 m-0 my-3 display-3 text-center font fw-bold">Cita de: 
-                    <span className="text-info fs-1 fw-normal"> {username}</span>
+                <p className="p-0 m-0 my-3 display-3 text-center font fw-bold">Cita de:
+                    <span className="text-info fs-1 fw-normal"> {
+                        (type === 'admin')
+                            ? user_cita.nombre
+                            : username.nombre
+                    } </span>
                 </p>
             </div>
-            <div className="col-lg-9 col-11 mx-auto rounded p-4 bg-option">
+
+            <div className="col-lg-8 col-11 mx-auto rounded p-4 bg-option">
                 <p className={`
-                ${(data_cita?.aceptada === 0 || data_cita?.aceptada === '0' ) && 'text-warning'} 
-                ${(data_cita?.aceptada === 1 || data_cita?.aceptada === '1' ) && 'text-success'} 
-                ${(data_cita?.aceptada === 2 || data_cita?.aceptada === '2' ) && 'text-danger'} 
+                ${(data_cita?.aceptada === 0 || data_cita?.aceptada === '0') && 'text-warning'} 
+                ${(data_cita?.aceptada === 1 || data_cita?.aceptada === '1') && 'text-success'} 
+                ${(data_cita?.aceptada === 2 || data_cita?.aceptada === '2') && 'text-danger'} 
                 text-center fs-3 font fw-bold
                 `}>{
-                    (data_cita?.aceptada === 0 || data_cita?.aceptada === '0' )
-                        ? 'Pendiente de aceptar o rechzar'
-                        :(data_cita?.aceptada === 1 || data_cita?.aceptada === '1' ) 
-                            ? 'Esta cita fue aceptada'
-                            :(data_cita?.aceptada === 2 || data_cita?.aceptada === '2' ) && 'Esta cita fue rechazada'
-                    
-                }</p>
+                        (data_cita?.aceptada === 0 || data_cita?.aceptada === '0')
+                            ? 'Pendiente de aceptar o rechzar'
+                            : (data_cita?.aceptada === 1 || data_cita?.aceptada === '1')
+                                ? 'Esta cita fue aceptada'
+                                : (data_cita?.aceptada === 2 || data_cita?.aceptada === '2') && 'Esta cita fue rechazada'
+
+                    }</p>
                 <form onSubmit={handleSubmit}>
                     <div className="mb-3">
                         <Input
@@ -278,7 +324,7 @@ export const ShowCardScreen = ({ history }) => {
                             clase={"form-control"}
                             value={titulo}
                             onChange={handleInputChange}
-                            des={`${(type==='admin')? true: false}`}
+                            des={`${(type === 'admin') ? true : false}`}
                         />
                     </div>
                     <div className="mb-3">
@@ -292,7 +338,7 @@ export const ShowCardScreen = ({ history }) => {
                                     clase={"form-control"}
                                     value={nombre_mascota}
                                     onChange={handleInputChange}
-                                    des={`${(type==='admin')? true: false}`}
+                                    des={`${(type === 'admin') ? true : false}`}
                                 />
                             </div>
                             <div className="col-12 col-lg-6">
@@ -304,7 +350,7 @@ export const ShowCardScreen = ({ history }) => {
                                     clase={"form-control"}
                                     value={tipo_animal}
                                     onChange={handleInputChange}
-                                    des={`${(type==='admin')? true: false}`}
+                                    des={`${(type === 'admin') ? true : false}`}
                                 />
                             </div>
                         </div>
@@ -316,7 +362,7 @@ export const ShowCardScreen = ({ history }) => {
                                 &&
                                 <>
                                     <div className="col-12 col-lg-6">
-                                        <label htmlFor="exampleInputPassword1" className="form-label">Veterinaria:</label>
+                                        <label htmlFor="exampleInputPassword1" className="form-label">Veterinaria (da click en el mapa):</label>
                                         {
                                             (data_cita !== -1 && bandera)
                                                 ?
@@ -336,7 +382,7 @@ export const ShowCardScreen = ({ history }) => {
                                                     <select
                                                         className="form-select"
                                                         onChange={(e) => {
-                                                            setVeterinariaId(e.target.value);
+                                                            handleLocation(e)
                                                         }}
                                                     >
                                                         <option defaultValue>Selecciona un valor</option>
@@ -354,7 +400,7 @@ export const ShowCardScreen = ({ history }) => {
                                     </div>
                                 </>
                             }
-                            <div className={`${type=== 'normal' ? 'col-12 col-lg-6' : 'col-12 col-lg-12'}`}>
+                            <div className={`${type === 'normal' ? 'col-12 col-lg-6' : 'col-12 col-lg-12'}`}>
                                 <div className="row">
                                     <div className="col-12 col-lg-6">
                                         <Input
@@ -365,7 +411,7 @@ export const ShowCardScreen = ({ history }) => {
                                             clase={"form-control"}
                                             value={fecha_cita}
                                             onChange={handleInputChange}
-                                            des={`${(type==='admin')? true: false}`}
+                                            des={`${(type === 'admin') ? true : false}`}
                                         />
                                     </div>
                                     <div className="col-12 col-lg-6">
@@ -377,7 +423,7 @@ export const ShowCardScreen = ({ history }) => {
                                             clase={"form-control"}
                                             value={hora_cita}
                                             onChange={handleInputChange}
-                                            des={`${(type==='admin')? true: false}`}
+                                            des={`${(type === 'admin') ? true : false}`}
                                         />
                                     </div>
                                 </div>
@@ -393,14 +439,14 @@ export const ShowCardScreen = ({ history }) => {
                             name="situacion"
                             value={situacion}
                             onChange={handleInputChange}
-                            disabled={(type==='admin')? true : false}
+                            disabled={(type === 'admin') ? true : false}
                         ></textarea>
                     </div>
                     <div className="row">
                         <div className="col d-lg-flex justify-content-between">
                             <Button
                                 type={"submit"}
-                                clase={`${(type==='normal') ? ' btn btn-warning' : ' btn btn-success' } 'btn w-100 mx-1 my-2 py-3'`}
+                                clase={`${(type === 'normal') ? ' btn btn-warning' : ' btn btn-success'} 'btn w-100 mx-1 my-2 py-3'`}
                                 texto={
                                     (type === "normal" && data_cita === -1)
                                         ? 'Crear cita'
@@ -432,13 +478,20 @@ export const ShowCardScreen = ({ history }) => {
                                 evento={(e) => {
                                     e.preventDefault();
                                     history.goBack();
-                                    localStorage.setItem('data-cita', null)
+                                    localStorage.removeItem('data-cita')
                                 }}
                             />
                         </div>
                     </div>
                 </form>
             </div>
+
+            {(type === 'normal') &&
+                <div className="col-4">
+
+                    <MapaScreen coordenadas={coordenadas} />
+                </div>
+            }
         </div>
     )
 }

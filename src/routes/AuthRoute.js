@@ -9,8 +9,8 @@ export const AuthRoute = () => {
         <div>
             <Switch>
                 <Route exact path="/login" component={LoginScreen} />
-                <Route exact path="/register-type" component={TypeOfUser} />
-                <Route exact path="/register/:type" component={RegisterScreen} />
+                <Route exact path="/login/register-type" component={TypeOfUser} />
+                <Route exact path="/login/register/:type" component={RegisterScreen} />
             </Switch>
         </div>
     )

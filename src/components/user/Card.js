@@ -27,6 +27,7 @@ export const Card = ({ history, user, data }) => {
         getUserById(id_user) //TODO: Cambiar el nombre del id de usuario
             .then(({ data: { nombre } }) => {
                 setUsername(nombre)
+                localStorage.setItem('id-user-cita', JSON.stringify({id_user, nombre}));
             })
     }, [id_user]);
 

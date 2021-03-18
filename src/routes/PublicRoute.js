@@ -9,14 +9,14 @@ export const PublicRoute = ({
     component: Component,
     ...rest
 }) => {
-
     
     const {user:{admin}} = useContext(AuthContext);
     let path = (admin) ? 'admin' : 'user'
+    
     return (
         <Route { ...rest }
             component={ (props) => (
-                ( !isAuthenticated )
+                (!isAuthenticated )
                     ? ( <Component { ...props } /> )
                     : ( <Redirect to={`/${path}`} /> )
             )}

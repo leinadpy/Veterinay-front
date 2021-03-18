@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { AuthContext } from '../../auth/AuthContext';
+import { fetchAction } from '../../helpers/fetch';
 import { getCitasByVeterinary } from '../../helpers/getCitasByVeterinary';
 import { getUserById } from '../../helpers/getUserById';
 import { LaodingScreen } from '../LaodingScreen';
@@ -13,35 +14,48 @@ export const AdminScreen = ({ history }) => {
     const [loading, setLoading] = useState(true);
 
     const [urlImage, setUrlImage] = useState('./assets/person.svg');
+    const [name, setName] = useState('')
+    const [nameLugar, setNameLugar] = useState('')
 
     const idUser = localStorage.getItem('user-login') || 0;
-    
+
     useEffect(() => {
-        if(idUser!==0){
+        if (idUser !== 0) {
             getUserById(idUser)
-            .then((res) => {
-                // console.log(res)
-                if (res.data.imagenUrl !== 'none') {
-                    setUrlImage(res.data.imagenUrl.replaceAll('*', '/'));
-                }
-            });
+                .then((res) => {
 
-        getCitasByVeterinary(idUser)
-            .then(({ data }) => {
+                    setName(res.data.nombre)
 
-                setCitas(data)
+                    if (res.data.imagenUrl !== 'none') {
+                        setUrlImage(res.data.imagenUrl.replaceAll('*', '/'));   
+                    }
 
-                setTimeout(() => {
-                    setLoading(false)
-                }, 1000);
-            })
+                    fetchAction(`Lugar/${idUser}`)
+                        .then(res=>res.json())
+                        .then(({data})=>{
+                            
+                            setNameLugar(data[0].veterinaria)
+                            
+                        })
+                });
 
-        return () => {
-            setLoading(false);
+            getCitasByVeterinary(idUser)
+                .then(({ data }) => {
+
+                    setCitas(data)
+
+                    setTimeout(() => {
+                        setLoading(false)
+                    }, 1000);
+                })
+
+            return () => {
+                setLoading(false);
+            }
         }
-        }
 
-    }, [idUser]);
+    }, [idUser, name]);
+
 
     const handleLogout = (e) => {
         e.preventDefault();
@@ -50,13 +64,50 @@ export const AdminScreen = ({ history }) => {
         setLoading(true);
 
         setTimeout(async () => {
+            localStorage.clear();
             dispatch({
                 type: 'logout'
             })
-            localStorage.clear();
             history.replace('/login');
         }, 1000);
 
+    };
+
+    const handleSetting = (e) => {
+        e.preventDefault();
+
+        if (idUser) {
+            fetchAction(`Usuario/${idUser}`)
+                .then(res => res.json())
+                .then(({ data }) => {
+                    const data_user = data;
+                    if (data.isAdmin) {
+                        fetchAction(`Lugar/${idUser}`)
+                            .then(res => res.json())
+                            .then(async({ data }) => {
+
+                                const data_usuario = { ...data, data_user }
+
+                                const url_mapbox = `https://api.mapbox.com/geocoding/v5/mapbox.places/${data[0].direccion}.json?autocomplete=true&language=es&access_token=pk.eyJ1IjoiZnJhbmtvMzYxIiwiYSI6ImNrbWJhbGU2dTFnbjEydm51eDY3M2c2NXEifQ.oJmUO9i2jcaLd0EpkWnhmQ`;
+
+                                const data_location = await fetch(url_mapbox);
+                                const location = await data_location.json();
+                                const center = location.features[0].center
+
+                                localStorage.setItem('location', JSON.stringify(center));
+
+
+                                localStorage.setItem('data-usuario', JSON.stringify(data_usuario));
+                                history.push('/setting/ssa')
+                            })
+                    } else {
+                        localStorage.setItem('data-usuario', JSON.stringify(data_user));
+                    }
+
+                })
+
+            //show settings admin
+        }
     };
 
 
@@ -71,13 +122,19 @@ export const AdminScreen = ({ history }) => {
                     <div className="imagen" style={{ backgroundImage: `url(${urlImage})` }}></div>
                 </div>
                 <div className="col-10">
-                    <h2 className="text-center my-4"><u className="fs-3 fw-bold text-warning font">Veterinaria Pets</u></h2>
+                    <h2 className="text-center fs-1 my-4">{nameLugar} <br/> <u className="fs-3 fw-bold text-warning font"> {`(${name})`}</u></h2>
                     <div className="col-12 border-bottom d-flex justify-content-between align-items-center">
                         <span className="display-5 fw-bold">Citas agendadas</span>
-                        <button
-                            className="font btn btn-danger fs-6 mb-2"
-                            onClick={handleLogout}
-                        ><i className="fas fa-sign-out-alt"></i> cerrar sesion</button>
+                        <div className="d-flex flex-column">
+                            <button
+                                className="font btn btn-primary fs-6 mb-2"
+                                onClick={handleSetting}
+                            ><i className="fas fa-cog"></i> configuración</button>
+                            <button
+                                className="font btn btn-danger fs-6 mb-2"
+                                onClick={handleLogout}
+                            ><i className="fas fa-sign-out-alt"></i> cerrar sesion</button>
+                        </div>
                     </div>
                 </div>
             </div>

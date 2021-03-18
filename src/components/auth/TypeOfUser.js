@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { AuthContext } from '../../auth/AuthContext';
 import { alertPopUp } from '../../helpers/alert';
 import { fetchAction } from '../../helpers/fetch';
 import { Button } from '../Button';
@@ -7,12 +8,14 @@ export const TypeOfUser = ({ history }) => {
 
     const dataUser = JSON.parse(localStorage.getItem('data')) || 0;
 
+    const { dispatch } = useContext(AuthContext);
+
     const handleTypeUser = async (user) => {
         if (user === "normal") {
 
             if (dataUser === 0) {
 
-                history.replace('/register/normal')
+                history.replace('/login/register/normal')
             } else {
 
                 const { displayName: nombre, email, photoURL, uid: password } = dataUser;
@@ -30,7 +33,7 @@ export const TypeOfUser = ({ history }) => {
 
                     alertPopUp(
                         "success",
-                        "Inicio de sesión correcto",
+                        "Cuenta creada",
                         mensaje,
                         "animate__animated animate__bounce",
                         "animate__animated animate__backOutDown",
@@ -38,9 +41,16 @@ export const TypeOfUser = ({ history }) => {
                         1000
                     );
 
-                    localStorage.clear();
-
                     setTimeout(() => {
+                        
+                        dispatch({
+                            type: 'login',
+                            payload: {
+                              id: data.id_usuario,
+                              admin: data.isAdmin
+                            }
+                          })
+
                         history.replace('/user')
                         localStorage.setItem('user-login',data.id_usuario );
                     }, 1000);
@@ -59,7 +69,7 @@ export const TypeOfUser = ({ history }) => {
             }
 
         } else {
-            history.replace('/register/admin')
+            history.replace('/login/register/admin')
         }
     };
 
@@ -72,7 +82,7 @@ export const TypeOfUser = ({ history }) => {
             </div>
             <div className="row my-3 flex mt-5 px-3">
                 <div className="col-lg-5 col-12 mt-3 mt-lg-0 bg-option rounded text-center">
-                    <img src="./assets/dog2.svg" className="w-100" alt="" />
+                    <img src="../assets/dog2.svg" className="w-100" alt="" />
                     <Button
                         clase={"btn btn-primary w-100 py-3 my-3"}
                         texto={"Normal user"}
@@ -81,7 +91,7 @@ export const TypeOfUser = ({ history }) => {
                     />
                 </div>
                 <div className="col-lg-5 col-12 mt-3 mt-lg-0 bg-option rounded text-center">
-                    <img src="./assets/dog.svg" className="w-100" alt="" />
+                    <img src="../assets/dog.svg" className="w-100" alt="" />
                     <Button
                         clase={"btn btn-primary w-100 py-3 my-3"}
                         texto={"Veterinarian"}

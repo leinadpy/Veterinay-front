@@ -14,14 +14,13 @@ import { PublicRoute } from './PublicRoute';
 export const AppRouter = () => {
 
     const {user} = useContext(AuthContext)
-    console.log(user)
+    
     return (
         <Router>
             <div className="container">
                 <Switch>
 
-                    <PublicRoute 
-                        exact 
+                    <PublicRoute  
                         path="/login" 
                         component={AuthRoute} 
                         isAuthenticated={user.logged} 
@@ -34,6 +33,7 @@ export const AppRouter = () => {
                         component={DashbordRoute}
                         isAuthenticated={user.logged}
                     />
+                    
 
                 </Switch>
             </div>

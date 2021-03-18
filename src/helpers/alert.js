@@ -1,4 +1,7 @@
 import Swal from 'sweetalert2';
+
+
+
 export const alertPopUp = (icon, title, text, popupInicio, popupFinal, showConfirmButton, timer) => {
     Swal.fire({
         icon,
@@ -16,4 +19,23 @@ export const alertPopUp = (icon, title, text, popupInicio, popupFinal, showConfi
         showConfirmButton,
         timer
     });
+}
+
+const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 4000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+        toast.addEventListener('mouseenter', Swal.stopTimer)
+        toast.addEventListener('mouseleave', Swal.resumeTimer)
+    }
+})
+
+export const ToastPopUp = (icon, title) => {
+    Toast.fire({
+        icon,
+        title
+    })
 }

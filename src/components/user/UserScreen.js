@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { AuthContext } from '../../auth/AuthContext';
+import { fetchAction } from '../../helpers/fetch';
 import { getCitasByUserId } from '../../helpers/getCitasByUserId';
 import { getUserById } from '../../helpers/getUserById';
 import { LaodingScreen } from '../LaodingScreen';
@@ -7,22 +8,27 @@ import { Card } from './Card'
 
 export const UserScreen = ({ history }) => {
 
-    
-    const {dispatch} = useContext(AuthContext);
+
+    const { dispatch } = useContext(AuthContext);
 
     const [loading, setLoading] = useState(true);
     const [urlImage, setUrlImage] = useState('./assets/person.svg');
     const [citas, setCitas] = useState([]);
+    const [nombre, setNombre] = useState('')
 
-    const idUser = localStorage.getItem('user-login') || 0;
+    const usuario = JSON.parse(localStorage.getItem('user')) 
+    const idUser = localStorage.getItem('user-login') || usuario.id;
 
-    
+
 
 
     useEffect(() => {
+        
         getUserById(idUser)
             .then((res) => {
                 // console.log(res)
+                setNombre(res.data.nombre);
+
                 if (res?.data && res.data.imagenUrl !== 'none') {
                     setUrlImage(res.data.imagenUrl.replaceAll('*', '/'));
                 }
@@ -59,16 +65,31 @@ export const UserScreen = ({ history }) => {
         setLoading(true);
 
         setTimeout(async () => {
+            localStorage.clear();
             dispatch({
                 type: 'logout'
             })
-            localStorage.clear();
             history.replace('/login');
         }, 1000);
 
     };
 
+    const handleSetting = (e) => {
+        e.preventDefault();
 
+        if (idUser) {
+            fetchAction(`Usuario/${idUser}`)
+                .then(res => res.json())
+                .then(({ data }) => {
+                    const data_user = data;
+
+                    localStorage.setItem('data-usuario', JSON.stringify(data_user));
+                    history.push('/setting/ssn')
+                })
+
+            //show settings admin
+        }
+    };
 
     if (loading) {
         return <LaodingScreen />
@@ -81,13 +102,19 @@ export const UserScreen = ({ history }) => {
                     <div className="imagen" style={{ backgroundImage: `url(${urlImage})` }}></div>
                 </div>
                 <div className="col-10">
-                    <h2 className="text-center my-2 mb-4">Bienvenido <u className="fs-5 fw-bold text-warning font">Franklin Martinez Lucas</u></h2>
+                    <h2 className="text-center my-2 mb-4">Bienvenido <u className="fs-5 fw-bold text-warning font">{nombre}</u></h2>
                     <div className="col-12 border-bottom d-flex justify-content-between align-items-center">
                         <span className="display-5 fw-bold">Citas creadas</span>
-                        <button
-                            className="font btn btn-danger fs-6 mb-2"
-                            onClick={handleLogout}
-                        ><i className="fas fa-sign-out-alt"></i> cerrar sesion</button>
+                        <div className="d-flex flex-column">
+                            <button
+                                className="font btn btn-primary fs-6 mb-2"
+                                onClick={handleSetting}
+                            ><i className="fas fa-cog"></i> configuración</button>
+                            <button
+                                className="font btn btn-danger fs-6 mb-2"
+                                onClick={handleLogout}
+                            ><i className="fas fa-sign-out-alt"></i> cerrar sesion</button>
+                        </div>
                     </div>
                 </div>
             </div>

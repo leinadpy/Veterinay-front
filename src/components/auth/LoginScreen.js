@@ -1,7 +1,8 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
+import validator from 'validator';
 
-import { alertPopUp } from "../../helpers/alert";
+import { alertPopUp, ToastPopUp } from "../../helpers/alert";
 import { googleAuthProvider, firebase } from "../../firebase/firebase-config";
 import { fetchAction } from "../../helpers/fetch";
 import { useForm } from "../../hooks/useForm";
@@ -10,9 +11,11 @@ import { Input } from "../Input";
 import { AuthContext } from "../../auth/AuthContext";
 
 export const LoginScreen = ({ history }) => {
+
+  const [disabled, setDisabled] = useState(false)
   
-  const {dispatch} = useContext(AuthContext);
-  
+  const { dispatch } = useContext(AuthContext);
+
   const [formValues, handleInputChange, reset] = useForm({
     email: "",
     password: "",
@@ -20,10 +23,13 @@ export const LoginScreen = ({ history }) => {
 
   const { email, password } = formValues;
 
-
-
   const handleLogin = async (e) => {
     e.preventDefault();
+
+    if (!isFormValid()) {
+      return;
+    }
+    setDisabled(true);
     // console.log({email, password}); return;
     const res = await fetchAction(`Usuario/login/${email}&${password}`, 'POST', { email, password });
     const { exito, mensaje, data } = await res.json();
@@ -41,7 +47,7 @@ export const LoginScreen = ({ history }) => {
       setTimeout(() => {
         dispatch({
           type: 'login',
-          payload:{
+          payload: {
             id: data.id_usuario,
             admin: data.isAdmin
           }
@@ -52,6 +58,7 @@ export const LoginScreen = ({ history }) => {
         if (data.isAdmin) history.replace('/admin')
         else history.replace('/user')
         localStorage.setItem('user-login', data.id_usuario);
+        localStorage.removeItem('data');
       }, 1500);
 
     } else {
@@ -64,12 +71,16 @@ export const LoginScreen = ({ history }) => {
         true,
         null
       );
+
+      setDisabled(false)
     }
   };
 
   const handleLoginGoogle = async (e) => {
     e.preventDefault();
+    
     try {
+      setDisabled(true);
       const {
         user: { displayName, email, photoURL, uid },
       } = await firebase.auth().signInWithPopup(googleAuthProvider);
@@ -78,7 +89,7 @@ export const LoginScreen = ({ history }) => {
         displayName,
         email,
         photoURL,
-        uid,  
+        uid,
       };
 
 
@@ -93,7 +104,7 @@ export const LoginScreen = ({ history }) => {
       const { exito, mensaje, data } = await res.json();
 
       if (exito) {
-
+        localStorage.removeItem('data');
         reset();
 
         alertPopUp(
@@ -109,7 +120,7 @@ export const LoginScreen = ({ history }) => {
         setTimeout(() => {
           dispatch({
             type: 'login',
-            payload:{
+            payload: {
               id: data.id_usuario,
               admin: data.isAdmin
             }
@@ -130,16 +141,32 @@ export const LoginScreen = ({ history }) => {
 
       }
       else {
-
+        
         localStorage.setItem("data", JSON.stringify(dataStorage));
-        history.push('/register-type');
+        history.push('/login/register-type');
 
       }
     } catch (error) {
+      setDisabled(false);
       console.log(error);
     }
   };
 
+  const isFormValid = () => {
+
+    if (validator.isEmpty(email) || validator.isEmpty(password)) {
+      ToastPopUp('error', 'Los campos estan vacios')
+      return false
+    }
+
+    if(!validator.isEmail(email)){
+      ToastPopUp('error', `"${email}" no es un correo valido`)
+      return false
+    }
+
+
+    return true
+  };
 
   return (
     <div className="row">
@@ -176,8 +203,7 @@ export const LoginScreen = ({ history }) => {
           </div>
           <div className="row my-4 font">
             <div className="col text-end">
-              <Link to="/register-type" className="text-secondary">
-                {" "}
+              <Link to="/login/register-type" onClick={()=> localStorage.removeItem('data')} className="text-secondary">
                 Create a count
               </Link>
             </div>
@@ -188,6 +214,9 @@ export const LoginScreen = ({ history }) => {
                 type={"submit"}
                 clase={"btn btn-primary w-100 mx-1 my-2 py-3"}
                 texto={"Login with app"}
+                des={
+                  (disabled) ? true : false
+                }
               //icono={}
               />
               <Button
@@ -198,6 +227,9 @@ export const LoginScreen = ({ history }) => {
                 texto={"Sing in with google"}
                 icono={"fab fa-google fs-3 mx-3"}
                 evento={handleLoginGoogle}
+                des={
+                  (disabled) ? true : false
+                }
               />
             </div>
           </div>
