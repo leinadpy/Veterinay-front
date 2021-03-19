@@ -52,14 +52,14 @@ export const LoginScreen = ({ history }) => {
             admin: data.isAdmin
           }
         })
-      }, 1800);
+      }, 1500);
 
       setTimeout(() => {
         if (data.isAdmin) history.replace('/admin')
         else history.replace('/user')
         localStorage.setItem('user-login', data.id_usuario);
         localStorage.removeItem('data');
-      }, 1500);
+      }, 1400);
 
     } else {
       alertPopUp(
@@ -125,9 +125,7 @@ export const LoginScreen = ({ history }) => {
               admin: data.isAdmin
             }
           })
-        }, 1800);
 
-        setTimeout(() => {
           localStorage.setItem('user-login', data.id_usuario);
 
           if (data.isAdmin) {
@@ -136,8 +134,9 @@ export const LoginScreen = ({ history }) => {
           else {
             history.replace('/user')
           }
-
         }, 1500);
+
+  
 
       }
       else {

@@ -2,7 +2,7 @@
 
 export const fetchAction = (endpoint, method='GET',data ) => {
     
-    const url = `https://localhost:5001/${endpoint}`;
+    const url = `https://franklinveterinaria.azurewebsites.net/${endpoint}`;
 
     // const data = { Nombre, Telefono, Username, Password, IsAdministrador }
 

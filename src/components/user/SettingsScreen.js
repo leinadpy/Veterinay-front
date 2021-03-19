@@ -317,7 +317,7 @@ export const SettingsScreen = ({ history }) => {
                     <div className="mt-3 fs-5">
 
                         <Input
-                            type={"text"}
+                            type={"number"}
                             id={"txt04"}
                             name={"telefono"}
                             label={"Telefono:"}
