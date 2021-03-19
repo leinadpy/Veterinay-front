@@ -2,7 +2,8 @@ import React, { useState } from 'react'
 import { Redirect, useParams } from 'react-router'
 import validator from 'validator';
 import { alertPopUp, ToastPopUp } from '../../helpers/alert';
-import { fetchAction } from '../../helpers/fetch';
+import { fetchAction, fetchMap } from '../../helpers/fetch';
+import { location, seleccionarlugar } from '../../helpers/map';
 import { useForm } from '../../hooks/useForm';
 import { Button } from '../Button';
 import { Input } from '../Input';
@@ -39,63 +40,38 @@ export const RegisterScreen = ({ history }) => {
     const dataUser = JSON.parse(localStorage.getItem('data')) || 0;
 
 
+    // const seleccionarlugar = async (e) => {
 
-    const location = async (e) => {
-        e.preventDefault();
+    //     if (validator.isEmpty(e.target.value)) {
+    //         ToastPopUp('error', 'elige una opcion valida selecLugar');
+    //         return
+    //     }
 
-        if (validator.isEmpty(direccion)) {
-            ToastPopUp('error', 'Escribe un lugar primero antes de buscar');
-            return
-        }
+        // setDireccionVeteriniaria(e.target.value)
 
-        const url_mapbox = `https://api.mapbox.com/geocoding/v5/mapbox.places/${direccion}.json?autocomplete=true&language=es&access_token=pk.eyJ1IjoiZnJhbmtvMzYxIiwiYSI6ImNrbWJhbGU2dTFnbjEydm51eDY3M2c2NXEifQ.oJmUO9i2jcaLd0EpkWnhmQ`;
+    //     const res_map = await fetchMap(e.target.value);
+        
+    //     localStorage.setItem('location', JSON.stringify(res_map.features[0].center));
 
-        const data = await fetch(url_mapbox);
-        const res = await data.json();
-        setLugares(res.features);
+        // setCoordenadas(res_map.features[0].center)
+    //     ToastPopUp('success', 'Da click en el mapa');
 
-        ToastPopUp('success', 'Selecciona una opcion debajo del mapa');
-    };
-
-
-    const seleccionarlugar = async (e) => {
-
-        if(validator.isEmpty(e.target.value)){
-            ToastPopUp('error', 'elige una opcion valida');
-            return
-        }
-
-        setDireccionVeteriniaria(e.target.value)
-
-        try {
-            const url_mapbox = `https://api.mapbox.com/geocoding/v5/mapbox.places/${e.target.value}.json?autocomplete=true&language=es&access_token=pk.eyJ1IjoiZnJhbmtvMzYxIiwiYSI6ImNrbWJhbGU2dTFnbjEydm51eDY3M2c2NXEifQ.oJmUO9i2jcaLd0EpkWnhmQ`;
-
-            const data = await fetch(url_mapbox);
-            const res = await data.json();
-            localStorage.setItem('location', JSON.stringify(res.features[0].center));
-            setCoordenadas(res.features[0].center)
-            ToastPopUp('success', 'Da click en el mapa');
-
-        } catch (error) {
-            console.log(error)
-        }
-
-    };
+    // };
 
 
     const handleCreateUser = async (e) => {
         e.preventDefault();
-       
-        if(type==='admin' && dataUser!== 0 &&  !isFormValidAdmin()){ // con google
-       
+
+        if (type === 'admin' && dataUser !== 0 && !isFormValidAdmin()) { // con google
+
             console.log('error admin google')
             return
         }
-        else if((type === 'admin') && dataUser===0 && (!isFormValidAdmin() || !isFormValidUser())){ //sin google
+        else if ((type === 'admin') && dataUser === 0 && (!isFormValidAdmin() || !isFormValidUser())) { //sin google
             console.log('error admin')
             return
         }
-        else if(type === 'normal' && !isFormValidUser()){ //normal
+        else if (type === 'normal' && !isFormValidUser()) { //normal
             console.log('error normal')
             return
         }
@@ -120,10 +96,10 @@ export const RegisterScreen = ({ history }) => {
 
             data = await res.json();
 
-            
+
             localStorage.removeItem('location');
         }
-        
+
 
         const id_usuario = data.data.id_usuario || false;
         if (id_usuario && type === 'admin') {
@@ -132,9 +108,9 @@ export const RegisterScreen = ({ history }) => {
                 { nombre_veterinaria, direccion: direccionVeteriniaria, id_usuario });
 
             const dataVeterinaria = await respVeterinaria.json();
-    
+
         }
-        
+
         if (data.exito) {
             reset();
             localStorage.removeItem('location');
@@ -147,7 +123,7 @@ export const RegisterScreen = ({ history }) => {
                 false,
                 1000
             );
-            
+
             if ((type === "normal" && !data.data?.isAuthGoogle) || (type === "admin" && !data.data?.isAuthGoogle)) {
                 setTimeout(() => {
                     history.replace('/login');
@@ -182,24 +158,24 @@ export const RegisterScreen = ({ history }) => {
             ToastPopUp('error', 'Todos los campos son obligatorios')
             return false;
         }
-        
-        if( !validator.isByteLength(password,{min:5}) ){
+
+        if (!validator.isByteLength(password, { min: 5 })) {
             ToastPopUp('error', 'La contraseña debde de ser minimo 5 caracteres')
             return false;
         }
-        if(!validator.equals(password,password2)){
+        if (!validator.equals(password, password2)) {
             ToastPopUp('error', 'Las contraseñas son diferentes')
             return false;
         }
-        if(!validator.isEmail(email)){
+        if (!validator.isEmail(email)) {
             ToastPopUp('error', 'Las contraseñas son diferentes')
             return false;
         }
         return true;
     };
 
-    const isFormValidAdmin=()=>{
-        if(validator.isEmpty(nombre_veterinaria)){
+    const isFormValidAdmin = () => {
+        if (validator.isEmpty(nombre_veterinaria)) {
             ToastPopUp('error', 'Todos los campos son obligatorios')
             return false;
         }
@@ -312,7 +288,11 @@ export const RegisterScreen = ({ history }) => {
                                     <div className="col-12 text-end mt-2">
                                         <button
                                             className="btn btn-outline-info"
-                                            onClick={location}
+                                            onClick={ async(e)=> {
+                                                e.preventDefault();
+                                                const res_map= await location(direccion);
+                                                setLugares(res_map);
+                                            }}
                                         >Search</button>
                                     </div>
                                 </div>
@@ -329,7 +309,7 @@ export const RegisterScreen = ({ history }) => {
                                 texto={"Create now"}
                                 des={
                                     (disabled) ? true : false
-                                  }
+                                }
                             //icono={}
                             //evento={} 
                             />
@@ -344,7 +324,7 @@ export const RegisterScreen = ({ history }) => {
                                 }}
                                 des={
                                     (disabled) ? true : false
-                                  }
+                                }
                             />
                         </div>
                     </div>
@@ -361,10 +341,15 @@ export const RegisterScreen = ({ history }) => {
                                 <MapaScreen coordenadas={coordenadas} />
                             </div>
                             <div className="col-12 mt-2">
-                                <select className="form-select" onChange={seleccionarlugar}>
+                                <select className="form-select" onChange={async(e)=>{
+                                    setDireccionVeteriniaria(e.target.value)
+                                    const res_map = await seleccionarlugar(e.target.value);
+                                    setCoordenadas(res_map)
+
+                                }}>
                                     <option value="">Despliga estas opciones</option>
                                     {
-                                        lugares.map(l => (
+                                        (lugares)&&lugares.map(l => (
                                             <option key={l.id} value={l.place_name_es} >{l.place_name_es}</option>
                                         ))
                                     }

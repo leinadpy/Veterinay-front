@@ -1,7 +1,7 @@
 
 
-export const fetchAction = (endpoint, method='GET',data ) => {
-    
+export const fetchAction = (endpoint, method = 'GET', data) => {
+
     const url = `https://franklinveterinaria.azurewebsites.net/${endpoint}`;
 
     // const data = { Nombre, Telefono, Username, Password, IsAdministrador }
@@ -16,10 +16,10 @@ export const fetchAction = (endpoint, method='GET',data ) => {
 
     // console.log(url)
 
-    if(method=== 'GET'){
+    if (method === 'GET') {
 
         return fetch(url);
-    }else{
+    } else {
         return fetch(url, options);
     }
 }
@@ -32,3 +32,19 @@ export const fetchAction = (endpoint, method='GET',data ) => {
         
 
 */
+
+
+export const fetchMap = async (direccion) => {
+    try {
+        const url_mapbox = `https://api.mapbox.com/geocoding/v5/mapbox.places/${direccion}.json?autocomplete=true&language=es&access_token=pk.eyJ1IjoiZnJhbmtvMzYxIiwiYSI6ImNrbWJhbGU2dTFnbjEydm51eDY3M2c2NXEifQ.oJmUO9i2jcaLd0EpkWnhmQ`;
+
+        const data = await fetch(url_mapbox);
+        
+        const res = await data.json();
+
+        return res;
+        
+    } catch (error) {
+        console.log(error)
+    }
+};

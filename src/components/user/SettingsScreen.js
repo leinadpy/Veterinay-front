@@ -4,10 +4,11 @@ import { Input } from '../Input'
 import { useForm } from '../../hooks/useForm'
 import { MapaScreen } from '../mapa/MapaScreen'
 import { useParams } from 'react-router'
-import { fetchAction } from '../../helpers/fetch'
+import { fetchAction, fetchMap } from '../../helpers/fetch'
 import { alertPopUp, ToastPopUp } from '../../helpers/alert'
-import Swal from 'sweetalert2'
+
 import validator from 'validator'
+import { location, seleccionarlugar } from '../../helpers/map'
 
 
 export const SettingsScreen = ({ history }) => {
@@ -16,40 +17,40 @@ export const SettingsScreen = ({ history }) => {
     // const id_usuario = localStorage.getItem('user-login') || false;
     const data_usuario = JSON.parse(localStorage.getItem('data-usuario')) || false;
 
-    const {admin} = JSON.parse(localStorage.getItem('user'))
+    const { admin } = JSON.parse(localStorage.getItem('user'))
 
     useEffect(() => {
-        if( setting ==='ssa' && admin ){
+        if (setting === 'ssa' && admin) {
 
             console.log('eres admin y estas en admin')
-            
-        }else if(setting === 'ssa' && !admin){
-    
+
+        } else if (setting === 'ssa' && !admin) {
+
             console.log('NO eres admin y quieres entrar a pagina admin')
             return history.replace('/user')
-    
-        }else if(setting !== 'ssa' && admin){
-    
+
+        } else if (setting !== 'ssa' && admin) {
+
             console.log('eres admin y quieres entrar a otro lugar')
             return history.replace('/admin')
         }
-    
-        if( setting ==='ssn' && admin===false ){
-    
+
+        if (setting === 'ssn' && admin === false) {
+
             console.log('eres normal y estas en normal')
-            
-        }else if(setting === 'ssn' && admin === true){
-    
+
+        } else if (setting === 'ssn' && admin === true) {
+
             console.log('NO eres normal y quieres entrar a pagina normal')
             return history.replace('/admin')
-    
-        }else if(setting !== 'ssn' && admin===false){
-    
+
+        } else if (setting !== 'ssn' && admin === false) {
+
             console.log('eres normal y quieres entrar a otro lugar')
             return history.replace('/user')
         }
     }, [setting, admin, history])
-    
+
 
     const [lugares, setLugares] = useState([])
     const [coordenadas, setCoordenadas] = useState([])
@@ -60,11 +61,11 @@ export const SettingsScreen = ({ history }) => {
         nombre: data_usuario.data_user?.nombre || data_usuario.nombre || '',
         password: data_usuario.data_user?.password || data_usuario.password || '',
         email: data_usuario.data_user?.email || data_usuario.email || '',
-        telefono: (data_usuario.data_user?.telefono === 'none'  || data_usuario.telefono === 'none') ? '' : data_usuario?.data_user?.telefono || data_usuario?.telefono,
+        telefono: (data_usuario.data_user?.telefono === 'none' || data_usuario.telefono === 'none') ? '' : data_usuario?.data_user?.telefono || data_usuario?.telefono,
         veterinaria: data_usuario[0]?.veterinaria || '',
         direccion: data_usuario[0]?.direccion || ''
-    })      
-    
+    })
+
     const { nombre,
         password,
         email,
@@ -75,81 +76,28 @@ export const SettingsScreen = ({ history }) => {
 
     const [direccionVeteriniaria, setDireccionVeteriniaria] = useState(direccion);
 
-    const seleccionarlugar = async (e) => {
 
-        if(validator.isEmpty(e.target.value)){
-            ToastPopUp('error','El campo de direccion es obligatorio')
-            return;
-        }
-
-        setDireccionVeteriniaria(e.target.value)
-
-        const url_mapbox = `https://api.mapbox.com/geocoding/v5/mapbox.places/${e.target.value}.json?autocomplete=true&language=es&access_token=pk.eyJ1IjoiZnJhbmtvMzYxIiwiYSI6ImNrbWJhbGU2dTFnbjEydm51eDY3M2c2NXEifQ.oJmUO9i2jcaLd0EpkWnhmQ`;
-
-        const data = await fetch(url_mapbox);
-        const res = await data.json();
-
-        
-        localStorage.setItem('location', JSON.stringify(res.features[0].center));
-        setCoordenadas(res.features[0].center)
-        console.log(coordenadas)
-    };
-
-
-    const location = async () => {
-
-        if(validator.isEmpty(direccion)){
-            ToastPopUp('error','El campo de direccion es obligatorio')
-            return;
-        }
-
-
-        const url_mapbox = `https://api.mapbox.com/geocoding/v5/mapbox.places/${direccion}.json?autocomplete=true&language=es&access_token=pk.eyJ1IjoiZnJhbmtvMzYxIiwiYSI6ImNrbWJhbGU2dTFnbjEydm51eDY3M2c2NXEifQ.oJmUO9i2jcaLd0EpkWnhmQ`;
-
-        const data = await fetch(url_mapbox);
-        const res = await data.json();
-        setLugares(res.features);
-        setBandera(true)
-
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer)
-                toast.addEventListener('mouseleave', Swal.resumeTimer)
-            }
-        })
-
-        Toast.fire({
-            icon: 'success',
-            title: 'Abre las opciones debajo del mapa y selecciona'
-        })
-    };
-
-    const handleUpdateInfo = async(e) => {
+    const handleUpdateInfo = async (e) => {
         e.preventDefault();
 
-        const tel = (telefono.trim()=== '') ? 'none' :  telefono.trim();
-    
+        const tel = (telefono.trim() === '') ? 'none' : telefono.trim();
+
         if (data_usuario?.data_user?.isAdmin) {
 
-            const google= data_usuario?.data_user?.isAuthGoogle||data_usuario?.isAuthGoogle;
+            const google = data_usuario?.data_user?.isAuthGoogle || data_usuario?.isAuthGoogle;
             console.log(google)
-            if(!isFormValid(google, true)){
+            if (!isFormValid(google, true)) {
                 return;
             }
-  
+
             const id_usuario = data_usuario.data_user.id_usuario;
-            
+
             const id_veteriniaria = data_usuario[0].idVeterinaria;
 
             const res_user = await fetchAction(`Usuario/admin/${id_usuario}&${nombre}&${tel}`, 'PUT', {
                 id_usuario,
                 nombre,
-                telefono:tel
+                telefono: tel
             })
 
             const data_user = await res_user.json();
@@ -157,7 +105,7 @@ export const SettingsScreen = ({ history }) => {
             const res_lugar = await fetchAction(`Lugar/${id_veteriniaria}`, 'PUT', {
                 id_veteriniaria,
                 nombre_veterinaria: veterinaria,
-                direccion : direccionVeteriniaria,
+                direccion: direccionVeteriniaria,
                 id_usuario
             });
 
@@ -166,9 +114,9 @@ export const SettingsScreen = ({ history }) => {
             // const dataUsuario = {data_lugar,data_user}
             // console.log(dataUsuario)
 
-            
-            if(data_lugar.exito && data_user.exito){
-                
+
+            if (data_lugar.exito && data_user.exito) {
+
                 localStorage.setItem('data-usuario', '');
 
                 alertPopUp(
@@ -179,37 +127,37 @@ export const SettingsScreen = ({ history }) => {
                     "animate__animated animate__backOutDown",
                     false,
                     1500
-                  );
-                
-                  setTimeout(() => {
+                );
+
+                setTimeout(() => {
                     history.replace('/admin')
-                  }, 1450);
+                }, 1450);
             }
 
-            
+
         }
-        else{
+        else {
 
-            const google= data_usuario?.data_user?.isAuthGoogle||data_usuario?.isAuthGoogle;
+            const google = data_usuario?.data_user?.isAuthGoogle || data_usuario?.isAuthGoogle;
 
-            if(!isFormValid(google, false)){
+            if (!isFormValid(google, false)) {
                 return;
             }
 
             const id_usuario = data_usuario.id_usuario;
-        
+
             const res_user = await fetchAction(`Usuario/normal/${id_usuario}&${nombre}&${tel}&${email}&${password}`, 'PUT', {
                 id_usuario,
                 nombre,
                 password,
                 email,
-                telefono:tel
+                telefono: tel
             });
 
             const data_user = await res_user.json();
-            
-            if(data_user?.exito){
-                
+
+            if (data_user?.exito) {
+
                 localStorage.setItem('data-usuario', '');
 
                 alertPopUp(
@@ -220,41 +168,41 @@ export const SettingsScreen = ({ history }) => {
                     "animate__animated animate__backOutDown",
                     false,
                     1500
-                  );
-                
-                  setTimeout(() => {
+                );
+
+                setTimeout(() => {
                     history.replace('/user')
-                  }, 1450);
+                }, 1450);
             }
         }
     };
 
     const isFormValid = (google, admin) => {
-        
-        if(google){ //usuario Google
-            if(validator.isEmpty(nombre)){
+
+        if (google) { //usuario Google
+            if (validator.isEmpty(nombre)) {
                 ToastPopUp('error', 'El campo nombre es requerido')
                 return false;
             }
-            if(admin){
-                if(validator.isEmpty(data_usuario[0].idVeterinaria) || validator.isEmpty(veterinaria) || !data_usuario[0].idVeterinaria ){
+            if (admin) {
+                if (validator.isEmpty(data_usuario[0].idVeterinaria) || validator.isEmpty(veterinaria) || !data_usuario[0].idVeterinaria) {
                     ToastPopUp('error', 'Los datos de la veterinaria son obligatorios')
                     return false;
-                 } 
-                   
+                }
+
             }
-            
+
         }
-       else{ //usuario NO google
+        else { //usuario NO google
             if (validator.isIn('', [nombre, email, password])) {
                 ToastPopUp('error', 'Todos los campos son obligatorios')
                 return false;
             }
-            if(admin){
-             if(validator.isEmpty(data_usuario[0].idVeterinaria) || !data_usuario[0].idVeterinaria){
-                ToastPopUp('error', 'Los datos de la veterinaria son obligatorios')
-                return false;
-             }   
+            if (admin) {
+                if (validator.isEmpty(data_usuario[0].idVeterinaria) || !data_usuario[0].idVeterinaria) {
+                    ToastPopUp('error', 'Los datos de la veterinaria son obligatorios')
+                    return false;
+                }
             }
         }
 
@@ -284,7 +232,7 @@ export const SettingsScreen = ({ history }) => {
                     </div>
                     <div className="mt-3 fs-5">
                         {
-                            ( (data_usuario?.isAuthGoogle === false) )
+                            ((data_usuario?.isAuthGoogle === false))
                             &&
                             <Input
                                 type={"password"}
@@ -300,7 +248,7 @@ export const SettingsScreen = ({ history }) => {
                     </div>
                     <div className="mt-3 fs-5">
                         {
-                            ( (data_usuario?.isAuthGoogle=== false))
+                            ((data_usuario?.isAuthGoogle === false))
                             &&
                             <Input
                                 type={"text"}
@@ -372,10 +320,16 @@ export const SettingsScreen = ({ history }) => {
                                 <div className="col-6">
                                     <div className="mt-3 fs-5">
                                         <label htmlFor="" className="form-label">Lugar</label>
-                                        <select className="form-select" onChange={seleccionarlugar}>
+                                        <select className="form-select" onChange={async(e) => {
+
+                                            setDireccionVeteriniaria(e.target.value)
+                                            const res_map = await seleccionarlugar(e.target.value);
+                                            setCoordenadas(res_map)
+
+                                        }}>
                                             <option >Despliga estas opciones</option>
                                             {
-                                                lugares.map(l => (
+                                                (lugares) && lugares.map(l => (
                                                     <option key={l.id} value={l.place_name_es} >{l.place_name_es}</option>
                                                 ))
                                             }
@@ -386,7 +340,13 @@ export const SettingsScreen = ({ history }) => {
                             <div className="col-12 text-start ">
                                 <button
                                     className="btn btn-info mt-2"
-                                    onClick={location}
+                                    onClick={async () => {
+
+                                        const res_map = await location(direccion);
+                                        setLugares(res_map);
+                                        setBandera(true)
+
+                                    }}
                                 >Actualizar direccion</button>
                                 <span className="mx-3">(presiona este boton para buscar)</span>
                             </div>

@@ -26,14 +26,16 @@ export const LoginScreen = ({ history }) => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    if (!isFormValid()) {
-      return;
-    }
+    if (!isFormValid()) return;
+
     setDisabled(true);
-    // console.log({email, password}); return;
+    
     const res = await fetchAction(`Usuario/login/${email}&${password}`, 'POST', { email, password });
+
     const { exito, mensaje, data } = await res.json();
+
     if (exito) {
+
       alertPopUp(
         "success",
         "Inicio de sesión correcto",
@@ -52,16 +54,16 @@ export const LoginScreen = ({ history }) => {
             admin: data.isAdmin
           }
         })
-      }, 1500);
 
-      setTimeout(() => {
         if (data.isAdmin) history.replace('/admin')
         else history.replace('/user')
         localStorage.setItem('user-login', data.id_usuario);
         localStorage.removeItem('data');
-      }, 1400);
 
+      }, 1400);
+      
     } else {
+
       alertPopUp(
         "error",
         "Upps...",
@@ -73,6 +75,7 @@ export const LoginScreen = ({ history }) => {
       );
 
       setDisabled(false)
+      
     }
   };
 

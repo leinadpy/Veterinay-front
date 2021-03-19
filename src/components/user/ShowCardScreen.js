@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Redirect, useParams } from 'react-router';
 import validator from 'validator';
 import { alertPopUp, ToastPopUp } from '../../helpers/alert';
-import { fetchAction } from '../../helpers/fetch';
+import { fetchAction, fetchMap } from '../../helpers/fetch';
 import { getVeterinariaById } from '../../helpers/getVeterinariaById';
 import { getVeterinarias } from '../../helpers/getVeterinarias';
 import { useForm } from '../../hooks/useForm';
@@ -259,25 +259,20 @@ export const ShowCardScreen = ({ history }) => {
 
     };
 
-    const handleChangeVeternary = () => {
-        setBandera(false)
-    };
 
     const handleLocation = async (e) => {
         setVeterinariaId(e.target.value);
 
         const { data: { direccion } } = await getVeterinariaById(e.target.value)
 
-        const url_mapbox = `https://api.mapbox.com/geocoding/v5/mapbox.places/${direccion}.json?autocomplete=true&language=es&access_token=pk.eyJ1IjoiZnJhbmtvMzYxIiwiYSI6ImNrbWJhbGU2dTFnbjEydm51eDY3M2c2NXEifQ.oJmUO9i2jcaLd0EpkWnhmQ`;
+        const res_map = await fetchMap(direccion);
 
-        const data = await fetch(url_mapbox);
-        const res = await data.json();
-        console.log(res.features[0].center)
-        localStorage.setItem('location', JSON.stringify(res.features[0].center));
-        setCoordenadas(res.features[0].center)
+        localStorage.setItem('location', JSON.stringify(res_map.features[0].center));
+        setCoordenadas(res_map.features[0].center)
     };
 
-    const isFormValid = (flag) => {
+    
+    const isFormValid = () => {
         
         if (validator.isIn('', [titulo,nombre_mascota,tipo_animal,fecha_cita,hora_cita,situacion])) {
 
@@ -372,7 +367,7 @@ export const ShowCardScreen = ({ history }) => {
                                                         <div className="col-12 mb-2 text-center">
                                                             <button
                                                                 className="btn btn-info"
-                                                                onClick={handleChangeVeternary}
+                                                                onClick={()=>{ setBandera(false) }}
                                                             >Click para cambiar de veterinaria</button>
                                                         </div>
                                                     </div>
