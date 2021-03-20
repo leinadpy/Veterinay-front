@@ -3,33 +3,48 @@ import { ToastPopUp } from "./alert";
 import { fetchMap } from "./fetch";
 
 export const location = async (direccion) => {
-   
-    if(validator.isEmpty(direccion)){
-        ToastPopUp('error','El campo de direccion es obligatorio')
+
+    if (validator.isEmpty(direccion)) {
+        ToastPopUp('error', 'El campo de direccion es obligatorio')
         return;
     }
 
-    const res_map = await fetchMap(direccion);
+    try {
 
-    ToastPopUp('success','Abre las opciones debajo del mapa y selecciona')
+        const res_map = await fetchMap(direccion);
+        ToastPopUp('success', 'Abre las opciones debajo del mapa y selecciona')
+        return res_map.features;
 
-    return res_map.features
+    } catch (error) {
+        console.log(error)
+        return []
+    }
+
+
 };
 
 
 export const seleccionarlugar = async (direccion) => {
 
     if (validator.isEmpty(direccion)) {
-        ToastPopUp('error', 'elige una opcion valida selecLugar');
+        ToastPopUp('error', 'elige una opcion valida');
         return
     }
 
-    const res_map = await fetchMap(direccion);
-    
+    try {
+        
+        const res_map = await fetchMap(direccion);
+        localStorage.setItem('location', JSON.stringify(res_map.features[0].center));
+
+        ToastPopUp('success', 'Da click en el mapa');
+
+        return res_map.features[0].center
+
+    } catch (error) {
+        console.log(error)
+        return []
+    }
+
     // console.log(res_map.features[0].center)
-    localStorage.setItem('location', JSON.stringify(res_map.features[0].center));
 
-    ToastPopUp('success', 'Da click en el mapa');
-
-    return res_map.features[0].center
 };

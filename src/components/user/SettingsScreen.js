@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Input } from '../Input'
 import { useForm } from '../../hooks/useForm'
 import { MapaScreen } from '../mapa/MapaScreen'
