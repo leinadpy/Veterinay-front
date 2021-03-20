@@ -3,6 +3,7 @@ import { AuthContext } from '../../auth/AuthContext';
 import { fetchAction } from '../../helpers/fetch';
 import { getCitasByVeterinary } from '../../helpers/getCitasByVeterinary';
 import { getUserById } from '../../helpers/getUserById';
+import { seleccionarlugar } from '../../helpers/map';
 import { LaodingScreen } from '../LaodingScreen';
 import { Card } from './Card';
 
@@ -88,16 +89,12 @@ export const AdminScreen = ({ history }) => {
 
                                 const data_usuario = { ...data, data_user }
 
-                                const url_mapbox = `https://api.mapbox.com/geocoding/v5/mapbox.places/${data[0].direccion}.json?autocomplete=true&language=es&access_token=pk.eyJ1IjoiZnJhbmtvMzYxIiwiYSI6ImNrbWJhbGU2dTFnbjEydm51eDY3M2c2NXEifQ.oJmUO9i2jcaLd0EpkWnhmQ`;
-
-                                const data_location = await fetch(url_mapbox);
-                                const location = await data_location.json();
-                                const center = location.features[0].center
-
-                                localStorage.setItem('location', JSON.stringify(center));
-
+                                console.log(data[0].direccion);
+                                
+                                seleccionarlugar(data[0].direccion);
 
                                 localStorage.setItem('data-usuario', JSON.stringify(data_usuario));
+                                
                                 history.push('/setting/ssa')
                             })
                     } else {

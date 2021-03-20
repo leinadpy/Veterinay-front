@@ -10,7 +10,7 @@ export const updateUser = async (history, data_usuario, direccionVeteriniaria, {
 
     if (data_usuario?.data_user?.isAdmin) {
 
-        if (!isFormValid(google, true, nombre, email, password, data_usuario, veterinaria)) {
+        if (!isFormValid(google, true, nombre, email, password, data_usuario, direccionVeteriniaria)) {
             return;
         }
 

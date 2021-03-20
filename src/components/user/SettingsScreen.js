@@ -38,6 +38,8 @@ export const SettingsScreen = ({ history }) => {
 
     const handleUpdateInfo = async (e) => {
         e.preventDefault();
+        console.log(direccionVeteriniaria)
+       
         updateUser(history, data_usuario, direccionVeteriniaria, formValues);
     };
 
@@ -153,7 +155,7 @@ export const SettingsScreen = ({ history }) => {
                                             setCoordenadas(res_map)
 
                                         }}>
-                                            <option >Despliga estas opciones</option>
+                                            <option value="">Despliga estas opciones</option>
                                             {
                                                 (lugares) && lugares.map(l => (
                                                     <option key={l.id} value={l.place_name_es} >{l.place_name_es}</option>
