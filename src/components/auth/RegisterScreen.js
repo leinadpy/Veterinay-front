@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
 import { Redirect, useParams } from 'react-router'
-import validator from 'validator';
-import { alertPopUp, ToastPopUp } from '../../helpers/alert';
-import { fetchAction, fetchMap } from '../../helpers/fetch';
+
+import { createUser } from '../../helpers/createUser';
 import { location, seleccionarlugar } from '../../helpers/map';
 import { useForm } from '../../hooks/useForm';
 import { Button } from '../Button';
@@ -15,7 +14,7 @@ export const RegisterScreen = ({ history }) => {
     const [coordenadas, setCoordenadas] = useState([])
     const [disabled, setDisabled] = useState(false);
 
-    const [formValue, handleInputChange, reset] = useForm({
+    const [formValue, handleInputChange] = useForm({
         nombre: '',
         email: '',
         password: '',
@@ -31,6 +30,7 @@ export const RegisterScreen = ({ history }) => {
 
     const { type } = useParams();
 
+
     if (type !== "normal" && type !== "admin") {
         return <Redirect to="/register-type" />
     }
@@ -40,152 +40,17 @@ export const RegisterScreen = ({ history }) => {
     const dataUser = JSON.parse(localStorage.getItem('data')) || 0;
 
 
-    // const seleccionarlugar = async (e) => {
-
-    //     if (validator.isEmpty(e.target.value)) {
-    //         ToastPopUp('error', 'elige una opcion valida selecLugar');
-    //         return
-    //     }
-
-        // setDireccionVeteriniaria(e.target.value)
-
-    //     const res_map = await fetchMap(e.target.value);
-        
-    //     localStorage.setItem('location', JSON.stringify(res_map.features[0].center));
-
-        // setCoordenadas(res_map.features[0].center)
-    //     ToastPopUp('success', 'Da click en el mapa');
-
-    // };
-
-
     const handleCreateUser = async (e) => {
+
         e.preventDefault();
 
-        if (type === 'admin' && dataUser !== 0 && !isFormValidAdmin()) { // con google
+        setDisabled(true)
 
-            console.log('error admin google')
-            return
-        }
-        else if ((type === 'admin') && dataUser === 0 && (!isFormValidAdmin() || !isFormValidUser())) { //sin google
-            console.log('error admin')
-            return
-        }
-        else if (type === 'normal' && !isFormValidUser()) { //normal
-            console.log('error normal')
-            return
-        }
+        createUser(type, dataUser, isAdmin, direccionVeteriniaria, history, formValue);
 
-        let res, data;
+        setDisabled(false)
 
-        if (dataUser === 0) { //usuario que NO uso Auth google
-            setDisabled(true)
-            res = await fetchAction(`Usuario`, 'POST',
-                { nombre, email, password, isAdmin });
-
-            data = await res.json();
-
-        } else { //usuario que SI uso el Auth google
-
-            setDisabled(true)
-            const { displayName: nombre, email, photoURL, uid: password } = dataUser;
-            const imagenUrl = photoURL.replaceAll('/', '*');
-
-            res = await fetchAction(`Usuario/crear-cuenta-google/${email}/${nombre}/${isAdmin}/${imagenUrl}/${password}`, 'POST',
-                { nombre, email, password, isAdmin, imagenUrl });
-
-            data = await res.json();
-
-
-            localStorage.removeItem('location');
-        }
-
-
-        const id_usuario = data.data.id_usuario || false;
-        if (id_usuario && type === 'admin') {
-
-            const respVeterinaria = await fetchAction(`Lugar`, 'POST',
-                { nombre_veterinaria, direccion: direccionVeteriniaria, id_usuario });
-
-            const dataVeterinaria = await respVeterinaria.json();
-
-        }
-
-        if (data.exito) {
-            reset();
-            localStorage.removeItem('location');
-            alertPopUp(
-                "success",
-                "Registro Existoso!",
-                data.mensaje,
-                "animate__animated animate__bounce",
-                "animate__animated animate__backOutDown",
-                false,
-                1000
-            );
-
-            if ((type === "normal" && !data.data?.isAuthGoogle) || (type === "admin" && !data.data?.isAuthGoogle)) {
-                setTimeout(() => {
-                    history.replace('/login');
-                    localStorage.setItem('user-login', id_usuario);
-                }, 1000);
-
-            } else {
-
-                setTimeout(() => {
-                    history.replace('/admin');
-                    localStorage.setItem('user-login', id_usuario);
-                }, 1000);
-            }
-
-
-        } else {
-            alertPopUp(
-                "error",
-                "Upps...",
-                data.mensaje,
-                "animate__animated animate__bounce",
-                "animate__animated animate__backOutDown",
-                true,
-                null
-            );
-        }
     };
-
-    const isFormValidUser = () => {
-
-        if (validator.isIn('', [nombre, email, password, password2])) {
-            ToastPopUp('error', 'Todos los campos son obligatorios')
-            return false;
-        }
-
-        if (!validator.isByteLength(password, { min: 5 })) {
-            ToastPopUp('error', 'La contraseña debde de ser minimo 5 caracteres')
-            return false;
-        }
-        if (!validator.equals(password, password2)) {
-            ToastPopUp('error', 'Las contraseñas son diferentes')
-            return false;
-        }
-        if (!validator.isEmail(email)) {
-            ToastPopUp('error', 'Las contraseñas son diferentes')
-            return false;
-        }
-        return true;
-    };
-
-    const isFormValidAdmin = () => {
-        if (validator.isEmpty(nombre_veterinaria)) {
-            ToastPopUp('error', 'Todos los campos son obligatorios')
-            return false;
-        }
-        if (validator.isEmpty(direccionVeteriniaria)) {
-            ToastPopUp('error', 'Busca la dirección en las opciones')
-            return false;
-        }
-
-        return true
-    }
 
 
     return (
@@ -286,14 +151,21 @@ export const RegisterScreen = ({ history }) => {
                                 </div>
                                 <div className="row">
                                     <div className="col-12 text-end mt-2">
-                                        <button
-                                            className="btn btn-outline-info"
-                                            onClick={ async(e)=> {
+                                        <Button
+                                            type={"button"}
+                                            clase={"btn btn-outline-info"}
+                                            texto={"Buscar"}
+                                            des={
+                                                (disabled) ? true : false
+                                            }
+                                            evento={async (e) => {
                                                 e.preventDefault();
-                                                const res_map= await location(direccion);
+                                                const res_map = await location(direccion);
                                                 setLugares(res_map);
-                                            }}
-                                        >Search</button>
+                                            }} 
+                                        icono={"fas fa-search ms-2"}
+                                        />
+
                                     </div>
                                 </div>
                             </div>
@@ -341,7 +213,7 @@ export const RegisterScreen = ({ history }) => {
                                 <MapaScreen coordenadas={coordenadas} />
                             </div>
                             <div className="col-12 mt-2">
-                                <select className="form-select" onChange={async(e)=>{
+                                <select className="form-select" onChange={async (e) => {
                                     setDireccionVeteriniaria(e.target.value)
                                     const res_map = await seleccionarlugar(e.target.value);
                                     setCoordenadas(res_map)
@@ -349,7 +221,7 @@ export const RegisterScreen = ({ history }) => {
                                 }}>
                                     <option value="">Despliga estas opciones</option>
                                     {
-                                        (lugares)&&lugares.map(l => (
+                                        (lugares) && lugares.map(l => (
                                             <option key={l.id} value={l.place_name_es} >{l.place_name_es}</option>
                                         ))
                                     }

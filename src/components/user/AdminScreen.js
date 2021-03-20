@@ -17,11 +17,11 @@ export const AdminScreen = ({ history }) => {
     const [name, setName] = useState('')
     const [nameLugar, setNameLugar] = useState('')
 
-    const idUser = localStorage.getItem('user-login') || 0;
+    const idUser = JSON.parse(localStorage.getItem('user')) || false
 
     useEffect(() => {
-        if (idUser !== 0) {
-            getUserById(idUser)
+        if (idUser?.id?.id !== 0) {
+            getUserById(idUser?.id)
                 .then((res) => {
 
                     setName(res.data.nombre)
@@ -30,7 +30,7 @@ export const AdminScreen = ({ history }) => {
                         setUrlImage(res.data.imagenUrl.replaceAll('*', '/'));   
                     }
 
-                    fetchAction(`Lugar/${idUser}`)
+                    fetchAction(`Lugar/${idUser?.id}`)
                         .then(res=>res.json())
                         .then(({data})=>{
                             
@@ -39,7 +39,7 @@ export const AdminScreen = ({ history }) => {
                         })
                 });
 
-            getCitasByVeterinary(idUser)
+            getCitasByVeterinary(idUser?.id)
                 .then(({ data }) => {
 
                     setCitas(data)
@@ -54,7 +54,7 @@ export const AdminScreen = ({ history }) => {
             }
         }
 
-    }, [idUser, name]);
+    }, [idUser?.id, name]);
 
 
     const handleLogout = (e) => {
@@ -76,13 +76,13 @@ export const AdminScreen = ({ history }) => {
     const handleSetting = (e) => {
         e.preventDefault();
 
-        if (idUser) {
-            fetchAction(`Usuario/${idUser}`)
+        if (idUser?.id) {
+            fetchAction(`Usuario/${idUser?.id}`)
                 .then(res => res.json())
                 .then(({ data }) => {
                     const data_user = data;
                     if (data.isAdmin) {
-                        fetchAction(`Lugar/${idUser}`)
+                        fetchAction(`Lugar/${idUser?.id}`)
                             .then(res => res.json())
                             .then(async({ data }) => {
 

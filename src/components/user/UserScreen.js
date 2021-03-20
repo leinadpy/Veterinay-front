@@ -17,10 +17,7 @@ export const UserScreen = ({ history }) => {
     const [nombre, setNombre] = useState('')
 
     const usuario = JSON.parse(localStorage.getItem('user')) 
-    const idUser = localStorage.getItem('user-login') || usuario.id;
-
-
-
+    const idUser = usuario.id || localStorage.getItem('user-login');
 
     useEffect(() => {
         
