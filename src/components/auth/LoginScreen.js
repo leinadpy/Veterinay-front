@@ -26,10 +26,10 @@ export const LoginScreen = ({ history }) => {
     e.preventDefault();
 
     let res_login = null;
-
+    setDisabled(true)
     if (!google) {
       res_login = await handleLogin(email, password, history, dispatch);
-    }else{
+    } else {
       res_login = await handleLoginGoogle(history, dispatch);
     }
 
@@ -43,9 +43,24 @@ export const LoginScreen = ({ history }) => {
   return (
     <div className="row">
       <div className="col-12">
-        <p className="p-0 m-0 display-1 text-center mt-5 font fw-bold">Login</p>
+        <p className="p-0 m-0 display-1 text-center font mt-2 fw-bold">Login
+          <lord-icon
+            src="https://cdn.lordicon.com//wzckbizc.json"
+            trigger="hover"
+            colors="primary:#121331,secondary:#08a88a"
+            stroke="100"
+            scale="50"
+            axis-x="51"
+            style={{ width: 128, height: 128 }}>
+          </lord-icon>
+        </p>
       </div>
-      <div className="col-lg-6 col-11 mt-5 mx-auto rounded p-4 bg-option">
+
+      <div className="col-5 bg-option  rounded mt-4 animate__animated animate__backInLeft">
+        <img src="./assets/cats.svg" className="w-100 h-100 animate__animated animate__repeat-2	animate__shakeX animate__delay-2s animate__slower"/>
+      </div>
+
+      <div className="col-lg-7 col-11 mt-4 mx-auto rounded p-5 bg-option">
         <form onSubmit={handleTypeLogin}>
           <div className="mb-3">
             <Input
@@ -107,6 +122,7 @@ export const LoginScreen = ({ history }) => {
           </div>
         </form>
       </div>
+
     </div>
   );
 };

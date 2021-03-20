@@ -56,15 +56,14 @@ export const RegisterScreen = ({ history }) => {
     return (
         <div className="row">
             <div className="col-12">
-                <p className="p-0 m-0 display-1 text-center mt-5 font fw-bold">
+                <p className="p-0 m-0 display-2 text-center mt-3 font fw-bold">
                     {
-                        (type === "normal")
-                            ? "User register"
-                            : "Veterinary record"
+                        (type !== "normal")
+                            && "Veterinary record"
                     }
                 </p>
             </div>
-            <div className={`${(type === "normal") ? "col-lg-6" : "col-lg-8"} col-11 mt-5 mx-auto rounded p-4 bg-option`}>
+            <div className={`${(type === "normal") ? "col-lg-6" : "col-lg-8"} col-11 mx-auto mt-5 rounded p-5 py-4 bg-option`}>
                 <form onSubmit={handleCreateUser}>
                     {
                         (dataUser === 0)
@@ -72,7 +71,7 @@ export const RegisterScreen = ({ history }) => {
                         <>
                             <div className="mb-3 none">
                                 <div className="row">
-                                    <div className={`${(type === "normal") ? "col-12" : "col-12 col-lg-6"} mt-2`}>
+                                    <div className={`${(type === "normal") ? "col-12 mt-3" : "col-12 col-lg-6 mt-2"}`}>
                                         <Input
                                             type={"text"}
                                             id={"txt01_nombre"}
@@ -83,7 +82,7 @@ export const RegisterScreen = ({ history }) => {
                                             onChange={handleInputChange}
                                         />
                                     </div>
-                                    <div className={`${(type === "normal") ? "col-12" : "col-12 col-lg-6"} mt-2`}>
+                                    <div className={`${(type === "normal") ? "col-12 mt-3" : "col-12 col-lg-6 mt-2"}`}>
                                         <Input
                                             type={"email"}
                                             id={"txt01"}
@@ -94,7 +93,7 @@ export const RegisterScreen = ({ history }) => {
                                             onChange={handleInputChange}
                                         />
                                     </div>
-                                    <div className={`${(type === "normal") ? "col-12" : "col-12 col-lg-6"} mt-2`}>
+                                    <div className={`${(type === "normal") ? "col-12 mt-3" : "col-12 col-lg-6 mt-2"}`}>
                                         <Input
                                             type={"password"}
                                             id={"txt01_password"}
@@ -162,8 +161,8 @@ export const RegisterScreen = ({ history }) => {
                                                 e.preventDefault();
                                                 const res_map = await location(direccion);
                                                 setLugares(res_map);
-                                            }} 
-                                        icono={"fas fa-search ms-2"}
+                                            }}
+                                            icono={"fas fa-search ms-2"}
                                         />
 
                                     </div>
@@ -174,7 +173,7 @@ export const RegisterScreen = ({ history }) => {
 
 
                     <div className="row">
-                        <div className="col d-lg-flex justify-content-between">
+                        <div className="col d-lg-flex mt-3 justify-content-between">
                             <Button
                                 type={"submit"}
                                 clase={"btn btn-success w-100 mx-1 my-2 py-3"}
@@ -205,33 +204,39 @@ export const RegisterScreen = ({ history }) => {
             </div>
             {
                 (type === "admin")
-                &&
-                <>
-                    <div className="col-4 mx-auto mt-5">
-                        <div className="row">
-                            <div className="col-12" style={{ height: 400 }}>
-                                <MapaScreen coordenadas={coordenadas} />
-                            </div>
-                            <div className="col-12 mt-2">
-                                <select className="form-select" onChange={async (e) => {
-                                    setDireccionVeteriniaria(e.target.value)
-                                    const res_map = await seleccionarlugar(e.target.value);
-                                    setCoordenadas(res_map)
+                    ?
+                    <>
+                        <div className="col-4 mx-auto mt-5">
+                            <div className="row">
+                                <div className="col-12" style={{ height: 400 }}>
+                                    <MapaScreen coordenadas={coordenadas} />
+                                </div>
+                                <div className="col-12 mt-2">
+                                    <select className="form-select" onChange={async (e) => {
+                                        setDireccionVeteriniaria(e.target.value)
+                                        const res_map = await seleccionarlugar(e.target.value);
+                                        setCoordenadas(res_map)
 
-                                }}>
-                                    <option value="">Despliga estas opciones</option>
-                                    {
-                                        (lugares) && lugares.map(l => (
-                                            <option key={l.id} value={l.place_name_es} >{l.place_name_es}</option>
-                                        ))
-                                    }
-                                </select>
+                                    }}>
+                                        <option value="">Despliga estas opciones</option>
+                                        {
+                                            (lugares) && lugares.map(l => (
+                                                <option key={l.id} value={l.place_name_es} >{l.place_name_es}</option>
+                                            ))
+                                        }
+                                    </select>
+                                </div>
                             </div>
                         </div>
+
+                    </>
+                    :
+                    <div className="col-6 mt-4 bg-option rounded text-center overflow-hidden  mt-5 p-4 animate__animated animate__backInLeft">
+                        <p className="p-0 m-0 fs-1 font text-center font fw-bold">
+                            Registro de usuarios
+                        </p>
+                        <img src="../../assets/animal.svg" className="w-100 p-4 h-100  animate__repeat-2 animate__bounce animate__animated 	 animate__delay-2s " />
                     </div>
-
-                </>
-
             }
         </div>
     )
