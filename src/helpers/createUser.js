@@ -17,6 +17,11 @@ export const createUser = async (type, dataUser,isAdmin, direccionVeteriniaria,h
 
         data = await res.json();
 
+        if(!data.exito){
+            alertPopUp("error", "Error con el email ingresado", data.mensaje, "animate__animated animate__bounce", "animate__animated animate__backOutDown", true, null);
+            return;
+        }
+
     } else { //usuario que SI uso el Auth google
 
         const { displayName: nombre, email, photoURL, uid: password } = dataUser;
