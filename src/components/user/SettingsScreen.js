@@ -38,7 +38,6 @@ export const SettingsScreen = ({ history }) => {
 
     const handleUpdateInfo = async (e) => {
         e.preventDefault();
-        console.log(direccionVeteriniaria)
        
         updateUser(history, data_usuario, direccionVeteriniaria, formValues);
     };
@@ -49,7 +48,7 @@ export const SettingsScreen = ({ history }) => {
                 <div className="col 12 text-center fs-1 font mt-4">Configuración de datos</div>
             </div>
             <div className="row mt-5">
-                <div className={`${(setting === 'ssa') ? 'col-6' : 'col-8 mx-auto'}`}>
+                <div className={`${(setting === 'ssa') ? 'col-12 col-lg-6' : 'col-12 col-lg-8 mx-auto'}`}>
                     <div className="mt-3 fs-5">
                         <Input
                             type={"text"}
@@ -121,7 +120,7 @@ export const SettingsScreen = ({ history }) => {
                                     />
                                 </div>
                             </div>
-                            <div className="col-6">
+                            <div className={`${(bandera) ? 'col-12 col-lg-6' : 'col-12'}`}>
                                 {
                                     (!bandera)
                                         ?
@@ -145,7 +144,7 @@ export const SettingsScreen = ({ history }) => {
                             {
                                 (bandera)
                                 &&
-                                <div className="col-6">
+                                <div className="col-12 col-lg-6">
                                     <div className="mt-3 fs-5">
                                         <label htmlFor="" className="form-label">Lugar</label>
                                         <select className="form-select" onChange={async (e) => {
@@ -167,7 +166,7 @@ export const SettingsScreen = ({ history }) => {
                             }
                             <div className="col-12 text-start ">
                                 <button
-                                    className="btn btn-info mt-2"
+                                    className="btn btn-info my-2 w-100 py-2"
                                     onClick={async () => {
 
                                         const res_map = await location(direccion);
@@ -175,18 +174,17 @@ export const SettingsScreen = ({ history }) => {
                                         setBandera(true)
 
                                     }}
-                                >Actualizar direccion</button>
-                                <span className="mx-3">(presiona este boton para buscar)</span>
+                                >Actualizar direccion (presiona este boton para buscar)</button>
                             </div>
                         </div>
                     }
 
                     <button
-                        className={`${(setting==='ssn' ? 'mt-5' : 'mt-2' )} btn btn-success w-100 py-3`}
+                        className={`${(setting==='ssn' ? 'mt-5 mb-3 mb-lg-0' : 'mt-2 mb-3 mb-lg-0' )} btn btn-success w-100 py-3`}
                         onClick={handleUpdateInfo}
                     >Actualizar informacion</button>
                 </div>
-                <div className="col-6">
+                <div className={`${(setting==='ssa'? 'col-12 col-lg-6 caja_mapa  mb-5 mb-lg-0' : 'col-12 col-lg-6 mb-5 mb-lg-0')}`}>
                     {
                         (setting === 'ssa') && <MapaScreen coordenadas={coordenadas} />
                     }

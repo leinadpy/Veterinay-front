@@ -1,0 +1,16 @@
+
+
+.contenedor_setting{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    outline: auto;
+}
+.contenedor_form{
+    width: 50%;
+    background: green;
+}
+.contenedor_mapa{
+    width: 50%;
+    height: 80vh;
+}

@@ -82,7 +82,7 @@ export const TypeOfUser = ({ history }) => {
             </div>
             <div className="row my-3 flex mt-5 px-3">
                 <div className="col-lg-5 col-12 mt-3 mt-lg-0 bg-option rounded text-center">
-                    <img src="../assets/dog2.svg" className="w-100" alt="" />
+                    <img src="../assets/dog2.svg" className="w-100" alt="" style={{width:200, height:350}} />
                     <Button
                         clase={"btn btn-primary w-100 py-3 my-3"}
                         texto={"Normal user"}
@@ -91,7 +91,7 @@ export const TypeOfUser = ({ history }) => {
                     />
                 </div>
                 <div className="col-lg-5 col-12 mt-3 mt-lg-0 bg-option rounded text-center">
-                    <img src="../assets/dog.svg" className="w-100" alt="" />
+                    <img src="../assets/dog.svg" className="w-100" alt="" style={{width:200, height:350}} />
                     <Button
                         clase={"btn btn-primary w-100 py-3 my-3"}
                         texto={"Veterinarian"}

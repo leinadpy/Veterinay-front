@@ -26,7 +26,9 @@ export const LoginScreen = ({ history }) => {
     e.preventDefault();
 
     let res_login = null;
+    
     setDisabled(true)
+
     if (!google) {
       res_login = await handleLogin(email, password, history, dispatch);
     } else {
@@ -56,11 +58,11 @@ export const LoginScreen = ({ history }) => {
         </p>
       </div>
 
-      <div className="col-5 bg-option  rounded mt-4 animate__animated animate__backInLeft">
-        <img src="./assets/cats.svg" className="w-100 h-100 animate__animated animate__repeat-2	animate__shakeX animate__delay-2s animate__slower"/>
+      <div className="col-11 col-lg-5 mx-auto p-3 p-lg-0 bg-option  rounded mt-4 animate__animated animate__backInLeft">
+        <img src="./assets/cats.svg" className="w-100 h-100 animate__animated animate__repeat-2	animate__shakeX animate__delay-2s animate__slower" alt="imagen de gatos con la palabra Welcome"/>
       </div>
 
-      <div className="col-lg-7 col-11 mt-4 mx-auto rounded p-5 bg-option">
+      <div className="col-lg-7 col-11 mt-4 mx-auto rounded p-4  bg-option">
         <form onSubmit={handleTypeLogin}>
           <div className="mb-3">
             <Input

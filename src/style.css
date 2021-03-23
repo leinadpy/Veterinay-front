@@ -68,6 +68,13 @@ textarea{
   overflow: hidden;
 }
 
+@media (max-width:769px){
+  .caja_mapa{
+   height: 400px !important;
+  }
+
+}
+
 /*========== Spinner ===========*/
 .sk-cube-grid {
     width: 90px;

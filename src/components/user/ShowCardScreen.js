@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router';
+import validator from 'validator';
 
 import { actionCard, actionNegative } from '../../helpers/actionCard';
+import { ToastPopUp } from '../../helpers/alert';
 
 import { fetchMap } from '../../helpers/fetch';
 import { getVeterinariaById } from '../../helpers/getVeterinariaById';
@@ -23,7 +25,6 @@ export const ShowCardScreen = ({ history }) => {
     const id_usuario = localStorage.getItem('user-login') || -1;
     const data_cita = JSON.parse(localStorage.getItem('data-cita')) || -1;
     const user_cita = JSON.parse(localStorage.getItem('id-user-cita')) || -1;
-    const username = JSON.parse(localStorage.getItem('id-user-cita')) || -1;
 
     const [listVeterinary, setListVeterinary] = useState([]);
     const [id_veteriniaria, setVeterinariaId] = useState(0);
@@ -43,12 +44,18 @@ export const ShowCardScreen = ({ history }) => {
     const { titulo, nombre_mascota, tipo_animal, fecha_cita, hora_cita, situacion } = formValues;
 
     const handleLocation = async (e) => {
+        
+        if (validator.isEmpty(e.target.value)) {
+            ToastPopUp('error', 'El campo de direccion es obligatorio')
+            return;
+        }
+
         setVeterinariaId(e.target.value);
 
         const { data: { direccion } } = await getVeterinariaById(e.target.value)
-
+     
         const res_map = await fetchMap(direccion);
-
+       
         localStorage.setItem('location', JSON.stringify(res_map.features[0].center));
         setCoordenadas(res_map.features[0].center)
     };
@@ -92,13 +99,16 @@ export const ShowCardScreen = ({ history }) => {
     return (
         <div className="row">
             <div className="col-12">
-                <p className="p-0 m-0 my-3 display-3 text-center font fw-bold">Cita de:
-                    <span className="text-info fs-1 fw-normal"> {
-                        (type === 'admin')
-                            ? user_cita.nombre
-                            : username.nombre
-                    } </span>
-                </p>
+                {
+                    (type === 'admin')
+                        ?
+                        <p className="p-0 m-0 my-3 display-3 text-center font fw-bold">Cita de:
+                            <span className="text-info fs-1 fw-normal"> {user_cita.nombre} </span>
+                        </p>
+                        :
+                        <p className="p-0 m-0 my-3 display-3 text-center font fw-bold">Crea una cita ahora
+                        </p>
+                }
             </div>
 
             <div className="col-lg-8 col-11 mx-auto rounded p-4 bg-option">
@@ -186,7 +196,7 @@ export const ShowCardScreen = ({ history }) => {
                                                             handleLocation(e)
                                                         }}
                                                     >
-                                                        <option defaultValue>Selecciona un valor</option>
+                                                        <option value="">Selecciona un valor</option>
                                                         {
                                                             listVeterinary.map(v => (
                                                                 <option
@@ -247,7 +257,7 @@ export const ShowCardScreen = ({ history }) => {
                         <div className="col d-lg-flex justify-content-between">
                             <Button
                                 type={"submit"}
-                                clase={`${(type === 'normal') ? ' btn btn-warning' : ' btn btn-success'} 'btn w-100 mx-1 my-2 py-3'`}
+                                clase={`${(type === 'normal') ? 'btn w-100 mx-1 my-2 py-3 btn-warning' : 'btn w-100 mx-1 my-2 py-3 btn-success'}  `}
                                 texto={
                                     (type === "normal" && data_cita === -1)
                                         ? 'Crear cita'

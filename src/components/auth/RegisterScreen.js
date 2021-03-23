@@ -63,7 +63,7 @@ export const RegisterScreen = ({ history }) => {
                     }
                 </p>
             </div>
-            <div className={`${(type === "normal") ? "col-lg-6" : "col-lg-8"} col-11 mx-auto mt-5 rounded p-5 py-4 bg-option`}>
+            <div className={`${(type === "normal") ? "col-lg-6" : "col-lg-8"} col-11 mx-auto my-1 my-lg-5 rounded p-4 py-4 bg-option`}>
                 <form onSubmit={handleCreateUser}>
                     {
                         (dataUser === 0)
@@ -104,7 +104,7 @@ export const RegisterScreen = ({ history }) => {
                                             onChange={handleInputChange}
                                         />
                                     </div>
-                                    <div className={`${(type === "normal") ? "col-12" : "col-12 col-lg-6"} mt-2`}>
+                                    <div className={`${(type === "normal") ? "col-12 mt-3" : "col-12 col-lg-6 mt-2"}`}>
                                         <Input
                                             type={"password"}
                                             id={"txt01_password2"}
@@ -148,7 +148,7 @@ export const RegisterScreen = ({ history }) => {
                                         />
                                     </div>
                                 </div>
-                                <div className="row">
+                                <div className="row ">
                                     <div className="col-12 text-end mt-2">
                                         <Button
                                             type={"button"}
@@ -206,12 +206,10 @@ export const RegisterScreen = ({ history }) => {
                 (type === "admin")
                     ?
                     <>
-                        <div className="col-4 mx-auto mt-5">
+                        <div className="col-11 mx-auto mt-5 col-lg-4">
                             <div className="row">
-                                <div className="col-12" style={{ height: 400 }}>
-                                    <MapaScreen coordenadas={coordenadas} />
-                                </div>
-                                <div className="col-12 mt-2">
+                                
+                                <div className="col-12">
                                     <select className="form-select" onChange={async (e) => {
                                         setDireccionVeteriniaria(e.target.value)
                                         const res_map = await seleccionarlugar(e.target.value);
@@ -226,16 +224,19 @@ export const RegisterScreen = ({ history }) => {
                                         }
                                     </select>
                                 </div>
+                                <div className="col-12  mt-2" style={{ height: 400 }}>
+                                    <MapaScreen coordenadas={coordenadas} />
+                                </div>
                             </div>
                         </div>
 
                     </>
                     :
-                    <div className="col-6 mt-4 bg-option rounded text-center overflow-hidden  mt-5 p-4 animate__animated animate__backInLeft">
+                    <div className="col-6 my-5 bg-option rounded text-center overflow-hidden d-none d-lg-block p-4 animate__animated animate__backInLeft">
                         <p className="p-0 m-0 fs-1 font text-center font fw-bold">
                             Registro de usuarios
                         </p>
-                        <img src="../../assets/animal.svg" className="w-100 p-4 h-100  animate__repeat-2 animate__bounce animate__animated 	 animate__delay-2s " />
+                        <img src="../../assets/animal.svg" alt="imagen de un chavo en un sofá" className="w-100 p-4 h-100  animate__repeat-2 animate__bounce animate__animated 	 animate__delay-2s " />
                     </div>
             }
         </div>
