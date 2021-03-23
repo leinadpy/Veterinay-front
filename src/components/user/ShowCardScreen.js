@@ -298,7 +298,7 @@ export const ShowCardScreen = ({ history }) => {
             </div>
 
             {(type === 'normal') &&
-                <div className="col-4" className={`${(type==='normal'? 'col-11 mx-auto col-lg-4 caja_mapa  my-5 mb-lg-0' : 'col-12 col-lg-4 my-5 mb-lg-0 mx-auto')}`} >
+                <div className={`${(type==='normal'? 'col-11 mx-auto col-lg-4 caja_mapa  my-5 mb-lg-0' : 'col-12 col-lg-4 my-5 mb-lg-0 mx-auto')}`} >
                     <MapaScreen coordenadas={coordenadas} />
                 </div>
             }

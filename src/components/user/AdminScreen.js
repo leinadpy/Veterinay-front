@@ -36,8 +36,11 @@ export const AdminScreen = ({ history }) => {
                         .then(({ data }) => {
 
                             setNameLugar(data[0].veterinaria)
-
+                            setTimeout(() => {
+                                setLoading(false)
+                            }, 1000);
                         })
+                
                 });
 
             getCitasByVeterinary(idUser?.id)
@@ -45,17 +48,16 @@ export const AdminScreen = ({ history }) => {
 
                     setCitas(data)
 
-                    setTimeout(() => {
-                        setLoading(false)
-                    }, 1000);
+                    
                 })
+               
 
             return () => {
-                setLoading(false);
+                setLoading(false)
             }
         }
 
-    }, [idUser?.id, name]);
+    }, [idUser?.id]);
 
 
     const handleLogout = (e) => {
@@ -70,7 +72,7 @@ export const AdminScreen = ({ history }) => {
                 type: 'logout'
             })
             history.replace('/login');
-        }, 1000);
+        }, 500);
 
     };
 
