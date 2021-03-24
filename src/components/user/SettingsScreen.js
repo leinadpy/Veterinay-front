@@ -62,7 +62,7 @@ export const SettingsScreen = ({ history }) => {
                     </div>
                     <div className="mt-3 fs-5">
                         {
-                            ((data_usuario?.isAuthGoogle === false))
+                            ((data_usuario?.isAuthGoogle === false || data_usuario?.data_user?.isAuthGoogle === false))
                             &&
                             <Input
                                 type={"password"}
@@ -77,7 +77,7 @@ export const SettingsScreen = ({ history }) => {
                     </div>
                     <div className="mt-3 fs-5">
                         {
-                            ((data_usuario?.isAuthGoogle === false))
+                            ((data_usuario?.isAuthGoogle === false || data_usuario?.data_user?.isAuthGoogle === false))
                             &&
                             <Input
                                 type={"text"}

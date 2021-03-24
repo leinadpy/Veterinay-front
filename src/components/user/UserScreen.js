@@ -23,7 +23,6 @@ export const UserScreen = ({ history }) => {
         
         getUserById(idUser)
             .then((res) => {
-                // console.log(res)
                 setNombre(res.data.nombre);
 
                 if (res?.data && res.data.imagenUrl !== 'none') {
@@ -36,7 +35,6 @@ export const UserScreen = ({ history }) => {
 
         getCitasByUserId(idUser)
             .then((res) => {
-                // console.log(res)
                 setCitas(res.data)
             })
 
@@ -51,13 +49,11 @@ export const UserScreen = ({ history }) => {
 
     const handleGoCreateAppoitment = (e) => {
         e.preventDefault();
-        //  console.log('ir a crear cita')
         history.push('/card/normal')
     };
 
     const handleLogout = (e) => {
         e.preventDefault();
-        console.log('adios');
 
         setLoading(true);
 

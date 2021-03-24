@@ -62,7 +62,6 @@ export const AdminScreen = ({ history }) => {
 
     const handleLogout = (e) => {
         e.preventDefault();
-        console.log('adios');
 
         setLoading(true);
 
@@ -90,8 +89,6 @@ export const AdminScreen = ({ history }) => {
                             .then(async ({ data }) => {
 
                                 const data_usuario = { ...data, data_user }
-
-                                console.log(data[0].direccion);
 
                                 seleccionarlugar(data[0].direccion);
 

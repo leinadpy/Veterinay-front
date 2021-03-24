@@ -64,8 +64,8 @@ export const handleLoginGoogle = async (history, dispatch) => {
     }
 
   } catch (error) {
-
-    console.log(error);
+    
+    alertPopUp("error", "Upps...", "algo ha salido mal", "animate__animated animate__bounce", "animate__animated animate__backOutDown", true, null);
      
   }
   

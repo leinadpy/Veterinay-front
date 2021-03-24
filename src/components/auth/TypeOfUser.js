@@ -27,8 +27,6 @@ export const TypeOfUser = ({ history }) => {
 
                 const { exito, data, mensaje } = await res.json();
 
-                console.log(data);
-
                 if (exito) {
 
                     alertPopUp(

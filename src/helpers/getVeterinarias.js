@@ -1,3 +1,4 @@
+import { ToastPopUp } from "./alert";
 import { fetchAction } from "./fetch";
 
 
@@ -10,7 +11,8 @@ export const getVeterinarias = async () => {
         data = await res.json();
         
     } catch (error) {
-        console.log(error);
+        
+        ToastPopUp('error','Ha ocurrido un error');
     }
     
     return data;

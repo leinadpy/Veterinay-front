@@ -3,8 +3,8 @@ import { ToastPopUp } from "./alert";
 
 export const fetchAction = (endpoint, method = 'GET', data) => {
 
-    const url_base = 'https://veterinaryfranklin.azurewebsites.net';
-    // const url_base = 'https://localhost:5001';
+    // const url_base = 'https://veterinaryfranklin.azurewebsites.net/';
+    const url_base = 'https://localhost:5001/';
 
     const url = `${url_base}/${endpoint}`;
 
@@ -18,7 +18,7 @@ export const fetchAction = (endpoint, method = 'GET', data) => {
         body: JSON.stringify(data)
     }
 
-    // console.log(url)
+   
 
     if (method === 'GET') {
 
@@ -49,7 +49,7 @@ export const fetchMap = async (direccion) => {
         
         
         if(data.status === 401){
-            console.log(data)
+            
             ToastPopUp('warning', 'La API en modo gratuita no deja seleccionar este lugar, intenta con otro')
             return;    
         }
@@ -59,7 +59,7 @@ export const fetchMap = async (direccion) => {
         return res;
         
     } catch (error) {
-        console.log(error)
+      
         return {}
     }
 };

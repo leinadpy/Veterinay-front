@@ -63,7 +63,6 @@ export const ShowCardScreen = ({ history }) => {
     useEffect(() => {
         getVeterinarias()
             .then(({ data }) => {
-                console.log(data);
                 setListVeterinary(data);
             })
         if (data_cita?.id_veteriniaria && type === 'normal') {

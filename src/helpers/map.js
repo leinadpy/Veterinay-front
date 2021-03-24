@@ -16,7 +16,6 @@ export const location = async (direccion) => {
         return res_map.features;
 
     } catch (error) {
-        console.log(error)
         return []
     }
 
@@ -41,10 +40,8 @@ export const seleccionarlugar = async (direccion) => {
         return res_map.features[0].center
 
     } catch (error) {
-        console.log(error)
+        
         return []
     }
-
-    // console.log(res_map.features[0].center)
 
 };

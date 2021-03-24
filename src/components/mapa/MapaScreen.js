@@ -6,8 +6,7 @@ import { IconLocation } from './IconLocation'
 
 export const MapaScreen = ({ coordenadas=false }) => {
     
-    // console.log(coordenadas)
-
+    
     const location = JSON.parse(localStorage.getItem('location')) || false;
 
     const lat = (location) ? location[1] : 25.897093;
@@ -15,10 +14,6 @@ export const MapaScreen = ({ coordenadas=false }) => {
 
     const longi =  (coordenadas.lenght === 0) ? coordenadas[0] : lgn        
     const lati = (coordenadas.lenght === 0) ? coordenadas[1] : lat
-
-    // console.log(longi)
-    // console.log(lati)
-    
 
     function LocationMarker() {
 

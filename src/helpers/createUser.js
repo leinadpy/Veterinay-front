@@ -94,16 +94,14 @@ const createVeternary = async(id, type, nombre_veterinaria, direccion) => {
 const validacion = (type, dataUser,nombre, email, password, password2,nombre_veterinaria, direccionVeteriniaria) => {
     if (type === 'admin' && dataUser !== 0 && !isFormValidAdmin(nombre_veterinaria, direccionVeteriniaria)) { // con google
 
-        console.log('error admin google')
         return false
     }
     else if ((type === 'admin') && dataUser === 0 && (!isFormValidAdmin(nombre_veterinaria, direccionVeteriniaria) || !isFormValidUser(nombre, email, password, password2))) { //sin google
 
-        console.log('error admin')
         return false
     }
     else if (type === 'normal' && !isFormValidUser(nombre, email, password, password2)) { //normal
-        console.log('error normal')
+     
         return false
     }
 

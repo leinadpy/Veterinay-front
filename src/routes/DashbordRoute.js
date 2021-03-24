@@ -12,8 +12,6 @@ export const DashbordRoute = () => {
     const {user:{admin}} = useContext(AuthContext);
     let path = (admin) ? 'admin' : 'user'
 
-    console.log(path)
-
     return (
         <div>
             <Switch>

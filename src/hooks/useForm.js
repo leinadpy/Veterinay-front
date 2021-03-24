@@ -18,19 +18,6 @@ export const useForm = ( initialState = {} ) => {
 
     }
 
-    // const handleValidation = ({target}) => {
-    //      if(target.value.trim() === ""){
-    //         target.classList.remove('border-success')
-    //         target.classList.add('border-danger', 'border', 'border-3')
-    //         return true;
-
-    //      }else{
-    //         target.classList.remove('border-danger')
-    //         target.classList.add('border-success', 'border', 'border-3')
-    //         return false;
-    //      }
-    // };
-
     return [ values, handleInputChange, reset ];
 
 }
