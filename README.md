@@ -1,4 +1,16 @@
-# Getting Started with Create React App
+# Descripción del proyecto
+Este proyecto tiene como objetivo realizar citas a veterinarias, por lo cual existen dos roles dentro de esta app:
+
+### -Usuario normal.
+Puede crear, editar o eliminar citas (para crear citas, debe de haber veterinarias registradas). También, puede modificar sus datos personales, pero no eliminar el usuario. 
+
+### -Usuario administrador.
+Puede aceptar o rechazar las citas que le hagan a su veterinaria; la cual debió haberse creado cuando se registró en la aplicación. También, puede modificar sus datos personales y acerca de su establecimiento, pero no borrar los datos.
+
+
+* * *
+
+## Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
@@ -32,7 +44,7 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 ### `npm run eject`
 
 **Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
+ 
 If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
 Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
