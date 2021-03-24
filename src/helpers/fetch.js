@@ -3,12 +3,10 @@ import { ToastPopUp } from "./alert";
 
 export const fetchAction = (endpoint, method = 'GET', data) => {
 
-    // const url_base = 'https://veterinaryfranklin.azurewebsites.net/';
-    const url_base = 'https://localhost:5001/';
+    const url_base = 'https://veterinariaservice.azurewebsites.net/';
+    // const url_base = 'https://localhost:5001/';
 
     const url = `${url_base}/${endpoint}`;
-
-    // const data = { Nombre, Telefono, Username, Password, IsAdministrador }
 
     const options = {
         method,
