@@ -23,8 +23,8 @@ export const ShowCardScreen = ({ history }) => {
     redireccion(history, type, admin, 'showCard')
 
     const id_usuario = localStorage.getItem('user-login') || -1;
-    const data_cita = JSON.parse(localStorage.getItem('data-cita')) || -1;
-    const user_cita = JSON.parse(localStorage.getItem('id-user-cita')) || -1;
+    const data_cita = JSON.parse(sessionStorage.getItem('data-cita')) || -1;
+    const user_cita = JSON.parse(sessionStorage.getItem('id-user-cita')) || -1;
 
     const [listVeterinary, setListVeterinary] = useState([]);
     const [id_veteriniaria, setVeterinariaId] = useState(0);
@@ -50,13 +50,14 @@ export const ShowCardScreen = ({ history }) => {
             return;
         }
 
+        ToastPopUp('info', 'Da click en el mapa')
         setVeterinariaId(e.target.value);
 
         const { data: { direccion } } = await getVeterinariaById(e.target.value)
      
         const res_map = await fetchMap(direccion);
        
-        localStorage.setItem('location', JSON.stringify(res_map.features[0].center));
+        sessionStorage.setItem('location', JSON.stringify(res_map.features[0].center));
         setCoordenadas(res_map.features[0].center)
     };
 
@@ -96,7 +97,7 @@ export const ShowCardScreen = ({ history }) => {
 
 
     return (
-        <div className="row">
+        <div className="row mb-5">
             <div className="col-12">
                 {
                     (type === 'admin')
@@ -130,7 +131,7 @@ export const ShowCardScreen = ({ history }) => {
                             type={"text"}
                             id={"txt01-titulo"}
                             name={"titulo"}
-                            label={"Ttile:"}
+                            label={"Título de la cita:"}
                             clase={"form-control"}
                             value={titulo}
                             onChange={handleInputChange}
@@ -246,7 +247,7 @@ export const ShowCardScreen = ({ history }) => {
                             className="form-control"
                             id="exampleFormControlTextarea1"
                             rows="5"
-                            name="situacion"
+                            name="Situación:"
                             value={situacion}
                             onChange={handleInputChange}
                             disabled={(type === 'admin') ? true : false}
@@ -283,12 +284,12 @@ export const ShowCardScreen = ({ history }) => {
                             <Button
                                 type={"submit"}
                                 clase={"btn btn-dark w-100 mx-1 my-2 py-3"}
-                                texto={"Back"}
+                                texto={"Cancelar"}
                                 //icono={}
                                 evento={(e) => {
                                     e.preventDefault();
                                     history.goBack();
-                                    localStorage.removeItem('data-cita')
+                                    sessionStorage.removeItem('data-cita')
                                 }}
                             />
                         </div>
@@ -297,7 +298,7 @@ export const ShowCardScreen = ({ history }) => {
             </div>
 
             {(type === 'normal') &&
-                <div className={`${(type==='normal'? 'col-11 mx-auto col-lg-4 caja_mapa  my-5 mb-lg-0' : 'col-12 col-lg-4 my-5 mb-lg-0 mx-auto')}`} >
+                <div className={`${(type==='normal'? 'col-11 mx-auto col-lg-4 caja_mapa mb-lg-0' : 'col-12 col-lg-4 my-5 mb-lg-0 mx-auto')}`} >
                     <MapaScreen coordenadas={coordenadas} />
                 </div>
             }

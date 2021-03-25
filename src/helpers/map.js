@@ -33,7 +33,7 @@ export const seleccionarlugar = async (direccion) => {
     try {
         
         const res_map = await fetchMap(direccion);
-        localStorage.setItem('location', JSON.stringify(res_map.features[0].center));
+        sessionStorage.setItem('location', JSON.stringify(res_map.features[0].center));
 
         ToastPopUp('success', 'Da click en el mapa');
 

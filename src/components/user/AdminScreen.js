@@ -66,7 +66,7 @@ export const AdminScreen = ({ history }) => {
         setLoading(true);
 
         setTimeout(async () => {
-            localStorage.clear();
+            sessionStorage.clear();
             dispatch({
                 type: 'logout'
             })
@@ -92,12 +92,12 @@ export const AdminScreen = ({ history }) => {
 
                                 seleccionarlugar(data[0].direccion);
 
-                                localStorage.setItem('data-usuario', JSON.stringify(data_usuario));
+                                sessionStorage.setItem('data-usuario', JSON.stringify(data_usuario));
 
                                 history.push('/setting/ssa')
                             })
                     } else {
-                        localStorage.setItem('data-usuario', JSON.stringify(data_user));
+                        sessionStorage.setItem('data-usuario', JSON.stringify(data_user));
                     }
 
                 })
@@ -127,11 +127,11 @@ export const AdminScreen = ({ history }) => {
                             <button
                                 className="font btn btn-primary fs-6 mb-2"
                                 onClick={handleSetting}
-                            ><i className="fas fa-cog"></i> configuración</button>
+                            ><i className="fas fa-cog"></i> Configuración</button>
                             <button
                                 className="font btn btn-danger fs-6 mb-2"
                                 onClick={handleLogout}
-                            ><i className="fas fa-sign-out-alt"></i> cerrar sesion</button>
+                            ><i className="fas fa-sign-out-alt"></i> Cerrar sesión</button>
                         </div>
 
                     </div>

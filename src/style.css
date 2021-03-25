@@ -77,9 +77,10 @@ textarea{
   flex-direction: column;
 }
 
-@media (max-width:769px){
+@media (max-width:969px){
   .caja_mapa{
    height: 400px !important;
+   margin-top: 20px;
   }
 
 }

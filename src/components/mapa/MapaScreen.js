@@ -7,7 +7,7 @@ import { IconLocation } from './IconLocation'
 export const MapaScreen = ({ coordenadas=false }) => {
     
     
-    const location = JSON.parse(localStorage.getItem('location')) || false;
+    const location = JSON.parse(sessionStorage.getItem('location')) || false;
 
     const lat = (location) ? location[1] : 25.897093;
     const lgn = (location) ? location[0] : -100.169715
@@ -26,7 +26,7 @@ export const MapaScreen = ({ coordenadas=false }) => {
       
         return  (
           <Marker position={[lati, longi] } icon={IconLocation}>
-            <Popup>You are here</Popup>
+            <Popup>El establecimiento esta aquí</Popup>
           </Marker>
         )
     }

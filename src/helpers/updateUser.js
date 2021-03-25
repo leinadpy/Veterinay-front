@@ -52,7 +52,7 @@ const resUpdate = (history, exito, path) => {
 
     if (exito) {
 
-        localStorage.removeItem('data-usuario');
+        sessionStorage.removeItem('data-usuario');
 
         alertPopUp("success", "Actualizacion completa", "Su registro fue actualizado correctamente", "animate__animated animate__bounce", "animate__animated animate__backOutDown", false, 1500);
 

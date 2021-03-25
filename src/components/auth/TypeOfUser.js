@@ -6,7 +6,7 @@ import { Button } from '../Button';
 
 export const TypeOfUser = ({ history }) => {
 
-    const dataUser = JSON.parse(localStorage.getItem('data')) || 0;
+    const dataUser = JSON.parse(sessionStorage.getItem('data')) || 0;
 
     const { dispatch } = useContext(AuthContext);
 
@@ -75,7 +75,7 @@ export const TypeOfUser = ({ history }) => {
         <>
             <div className="row my-5">
                 <div className="col-12 text-center font fs-2 border-bottom">
-                    <p className="p-0 pb-2 m-0 display-5 fw-bold">What kind of user do you wanna be? </p>
+                    <p className="p-0 pb-2 m-0 display-5 fw-bold">¿Qué tipo de usuario desea ser? </p>
                 </div>
             </div>
             <div className="row my-3 flex mt-5 px-3">
@@ -83,7 +83,7 @@ export const TypeOfUser = ({ history }) => {
                     <img src="../assets/dog2.svg" className="w-100" alt="" style={{width:200, height:350}} />
                     <Button
                         clase={"btn btn-primary w-100 py-3 my-3"}
-                        texto={"Normal user"}
+                        texto={"Usuario normal"}
                         //icono={}
                         evento={() => { handleTypeUser("normal") }}
                     />
@@ -92,7 +92,7 @@ export const TypeOfUser = ({ history }) => {
                     <img src="../assets/dog.svg" className="w-100" alt="" style={{width:200, height:350}} />
                     <Button
                         clase={"btn btn-primary w-100 py-3 my-3"}
-                        texto={"Veterinarian"}
+                        texto={"Administrador de veterinaria"}
                         //icono={}
                         evento={() => { handleTypeUser("admin") }}
                     />

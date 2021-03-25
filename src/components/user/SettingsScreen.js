@@ -12,7 +12,7 @@ export const SettingsScreen = ({ history }) => {
 
     const { setting } = useParams();
 
-    const data_usuario = JSON.parse(localStorage.getItem('data-usuario')) || false;
+    const data_usuario = JSON.parse(sessionStorage.getItem('data-usuario')) || false;
 
     const { admin } = JSON.parse(localStorage.getItem('user'))
 
@@ -47,7 +47,7 @@ export const SettingsScreen = ({ history }) => {
             <div className="row">
                 <div className="col 12 text-center fs-1 font mt-4">Configuración de datos</div>
             </div>
-            <div className="row mt-5">
+            <div className="row my-5">
                 <div className={`${(setting === 'ssa') ? 'col-12 col-lg-6' : 'col-12 col-lg-8 mx-auto'}`}>
                     <div className="mt-3 fs-5">
                         <Input
@@ -68,7 +68,7 @@ export const SettingsScreen = ({ history }) => {
                                 type={"password"}
                                 id={"txt02"}
                                 name={"password"}
-                                label={"Password:"}
+                                label={"Contraseña:"}
                                 clase={"form-control"}
                                 value={password}
                                 onChange={handleInputChange}
@@ -83,7 +83,7 @@ export const SettingsScreen = ({ history }) => {
                                 type={"text"}
                                 id={"txt03"}
                                 name={"email"}
-                                label={"Email"}
+                                label={"Correo electrónico"}
                                 clase={"form-control"}
                                 value={email}
                                 onChange={handleInputChange}
@@ -96,7 +96,7 @@ export const SettingsScreen = ({ history }) => {
                             type={"number"}
                             id={"txt04"}
                             name={"telefono"}
-                            label={"Telefono:"}
+                            label={"Teléfono:"}
                             clase={"form-control"}
                             value={telefono}
                             onChange={handleInputChange}
@@ -125,7 +125,7 @@ export const SettingsScreen = ({ history }) => {
                                     (!bandera)
                                         ?
                                         <>
-                                            <p className="mt-4 fs-5">Direccion escogida: <span className="fw-bold text-warning">{direccion}</span></p>
+                                            <p className="mt-4 fs-5">Dirección escogida: <span className="fw-bold text-warning">{direccion}</span></p>
                                         </>
                                         :
                                         <div className="mt-3 fs-5">
@@ -174,7 +174,7 @@ export const SettingsScreen = ({ history }) => {
                                         setBandera(true)
 
                                     }}
-                                >Actualizar direccion (presiona este boton para buscar)</button>
+                                >Actualizar dirección (presiona este botón para buscar)</button>
                             </div>
                         </div>
                     }
@@ -182,9 +182,9 @@ export const SettingsScreen = ({ history }) => {
                     <button
                         className={`${(setting==='ssn' ? 'mt-5 mb-3 mb-lg-0' : 'mt-2 mb-3 mb-lg-0' )} btn btn-success w-100 py-3`}
                         onClick={handleUpdateInfo}
-                    >Actualizar informacion</button>
+                    >Actualizar información</button>
                 </div>
-                <div className={`${(setting==='ssa'? 'col-12 col-lg-6 caja_mapa  mb-5 mb-lg-0' : 'col-12 col-lg-6 mb-5 mb-lg-0')}`}>
+                <div className={`${(setting==='ssa'? 'col-12 col-lg-6 caja_mapa mb-5 mb-lg-0' : 'col-12 col-lg-6 mb-5 mb-lg-0')}`}>
                     {
                         (setting === 'ssa') && <MapaScreen coordenadas={coordenadas} />
                     }

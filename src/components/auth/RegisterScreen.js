@@ -37,7 +37,7 @@ export const RegisterScreen = ({ history }) => {
 
     let isAdmin = (type === 'admin') ? true : false;
 
-    const dataUser = JSON.parse(localStorage.getItem('data')) || 0;
+    const dataUser = JSON.parse(sessionStorage.getItem('data')) || 0;
 
 
     const handleCreateUser = async (e) => {
@@ -59,7 +59,7 @@ export const RegisterScreen = ({ history }) => {
                 <p className="p-0 m-0 display-2 text-center mt-3 font fw-bold">
                     {
                         (type !== "normal")
-                            && "Veterinary record"
+                            && "Registro para veterinaria"
                     }
                 </p>
             </div>
@@ -76,7 +76,7 @@ export const RegisterScreen = ({ history }) => {
                                             type={"text"}
                                             id={"txt01_nombre"}
                                             name={"nombre"}
-                                            label={"Name:"}
+                                            label={"Nombre Completo:"}
                                             clase={"form-control"}
                                             value={nombre}
                                             onChange={handleInputChange}
@@ -87,7 +87,7 @@ export const RegisterScreen = ({ history }) => {
                                             type={"email"}
                                             id={"txt01"}
                                             name={"email"}
-                                            label={"Email:"}
+                                            label={"Correo electrónico:"}
                                             clase={"form-control"}
                                             value={email}
                                             onChange={handleInputChange}
@@ -98,7 +98,7 @@ export const RegisterScreen = ({ history }) => {
                                             type={"password"}
                                             id={"txt01_password"}
                                             name={"password"}
-                                            label={"Password:"}
+                                            label={"Contraseña:"}
                                             clase={"form-control"}
                                             value={password}
                                             onChange={handleInputChange}
@@ -109,7 +109,7 @@ export const RegisterScreen = ({ history }) => {
                                             type={"password"}
                                             id={"txt01_password2"}
                                             name={"password2"}
-                                            label={"Confirm password:"}
+                                            label={"Confirmar contraseña:"}
                                             clase={"form-control"}
                                             value={password2}
                                             onChange={handleInputChange}
@@ -130,7 +130,7 @@ export const RegisterScreen = ({ history }) => {
                                             type={"text"}
                                             id={"txt01_veterinary"}
                                             name={"nombre_veterinaria"}
-                                            label={"Name veterinary"}
+                                            label={"Nombre de la veterinaria"}
                                             clase={"form-control"}
                                             value={nombre_veterinaria}
                                             onChange={handleInputChange}
@@ -141,7 +141,7 @@ export const RegisterScreen = ({ history }) => {
                                             type={"text"}
                                             id={"txt01_address"}
                                             name={"direccion"}
-                                            label={"Establishment address:"}
+                                            label={"Dirección del establecimiento:"}
                                             clase={"form-control"}
                                             value={direccion}
                                             onChange={handleInputChange}
@@ -177,7 +177,7 @@ export const RegisterScreen = ({ history }) => {
                             <Button
                                 type={"submit"}
                                 clase={"btn btn-success w-100 mx-1 my-2 py-3"}
-                                texto={"Create now"}
+                                texto={"Create ahora"}
                                 des={
                                     (disabled) ? true : false
                                 }
@@ -187,7 +187,7 @@ export const RegisterScreen = ({ history }) => {
                             <Button
                                 type={"submit"}
                                 clase={"btn btn-dark w-100 mx-1 my-2 py-3"}
-                                texto={"Back"}
+                                texto={"Cancelar"}
                                 //icono={}
                                 evento={(e) => {
                                     e.preventDefault();
@@ -216,7 +216,7 @@ export const RegisterScreen = ({ history }) => {
                                         setCoordenadas(res_map)
 
                                     }}>
-                                        <option value="">Despliga estas opciones</option>
+                                        <option value="">Selecciona una opción</option>
                                         {
                                             (lugares) && lugares.map(l => (
                                                 <option key={l.id} value={l.place_name_es} >{l.place_name_es}</option>
@@ -234,7 +234,7 @@ export const RegisterScreen = ({ history }) => {
                     :
                     <div className="col-6 my-5 bg-option rounded text-center overflow-hidden d-none d-lg-block p-4 animate__animated animate__backInLeft">
                         <p className="p-0 m-0 fs-1 font text-center font fw-bold">
-                            Registro de usuarios
+                            Registro de usuario
                         </p>
                         <img src="../../assets/animal.svg" alt="imagen de un chavo en un sofá" className="w-100 p-4 h-100  animate__repeat-2 animate__bounce animate__animated 	 animate__delay-2s " />
                     </div>

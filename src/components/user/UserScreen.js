@@ -58,7 +58,7 @@ export const UserScreen = ({ history }) => {
         setLoading(true);
 
         setTimeout(async () => {
-            localStorage.clear();
+            sessionStorage.clear();
             dispatch({
                 type: 'logout'
             })
@@ -76,7 +76,7 @@ export const UserScreen = ({ history }) => {
                 .then(({ data }) => {
                     const data_user = data;
 
-                    localStorage.setItem('data-usuario', JSON.stringify(data_user));
+                    sessionStorage.setItem('data-usuario', JSON.stringify(data_user));
                     history.push('/setting/ssn')
                 })
 
@@ -105,11 +105,11 @@ export const UserScreen = ({ history }) => {
                             <button
                                 className="font btn btn-primary fs-6 mb-2"
                                 onClick={handleSetting}
-                            ><i className="fas fa-cog"></i> configuración</button>
+                            ><i className="fas fa-cog"></i> Configuración</button>
                             <button
                                 className="font btn btn-danger fs-6 mb-2"
                                 onClick={handleLogout}
-                            ><i className="fas fa-sign-out-alt"></i> cerrar sesion</button>
+                            ><i className="fas fa-sign-out-alt"></i> Cerrar sesión</button>
                         </div>
                     </div>
                 </div>

@@ -66,7 +66,7 @@ const actionResponse = (history, path, exito, mensaje) => {
     if (exito) {
         alertPopUp("success", "Operación completada", mensaje, "animate__animated animate__bounce", "animate__animated animate__backOutDown", false, 1500);
         history.replace(`/${path}`);
-        localStorage.removeItem('data-cita')
+        sessionStorage.removeItem('data-cita')
     }
 };
 

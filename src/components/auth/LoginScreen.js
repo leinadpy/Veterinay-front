@@ -45,7 +45,7 @@ export const LoginScreen = ({ history }) => {
   return (
     <div className="row">
       <div className="col-12">
-        <p className="p-0 m-0 display-1 text-center font mt-2 fw-bold">Login
+        <p className="p-0 m-0 display-1 text-center font mt-2 fw-bold">Inicio de sesión
           <lord-icon
             src="https://cdn.lordicon.com//wzckbizc.json"
             trigger="hover"
@@ -64,22 +64,19 @@ export const LoginScreen = ({ history }) => {
 
       <div className="col-lg-7 col-11 mt-4 mx-auto rounded p-4  bg-option">
         <form onSubmit={handleTypeLogin}>
-          <div className="mb-3">
+          <div className="mb-4">
             <Input
               type={"text"}
               id={"txt01"}
               name={"email"}
-              label={"Email address:"}
+              label={"Correo electrónico:"}
               clase={"form-control"}
               value={email}
               onChange={handleInputChange}
             />
 
-            <div id="emailHelp" className="form-text">
-              We'll never share your email with anyone else.
-            </div>
           </div>
-          <div className="mb-3">
+          <div className="mb-4">
             <Input
               type={"password"}
               id={"txt02"}
@@ -92,8 +89,8 @@ export const LoginScreen = ({ history }) => {
           </div>
           <div className="row my-4 font">
             <div className="col text-end">
-              <Link to="/login/register-type" onClick={() => localStorage.removeItem('data')} className="text-secondary">
-                Create a count
+              <Link to="/login/register-type" onClick={() => sessionStorage.removeItem('data')} className="text-secondary">
+                <b>Crear una cuenta</b>
               </Link>
             </div>
           </div>
@@ -102,7 +99,7 @@ export const LoginScreen = ({ history }) => {
               <Button
                 type={"submit"}
                 clase={"btn btn-primary w-100 mx-1 my-2 py-3"}
-                texto={"Login with app"}
+                texto={"Iniciar con la aplicación"}
                 des={
                   (disabled) ? true : false
                 }
@@ -113,7 +110,7 @@ export const LoginScreen = ({ history }) => {
                 clase={
                   "btn btn-light w-100 mx-1 my-2 py-3 d-flex justify-content-center align-items-center"
                 }
-                texto={"Sing in with google"}
+                texto={"Iniciar con google"}
                 icono={"fab fa-google fs-3 mx-3"}
                 evento={(e) => { handleTypeLogin(e, true) }}
                 des={

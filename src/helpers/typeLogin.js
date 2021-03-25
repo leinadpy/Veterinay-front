@@ -49,7 +49,7 @@ export const handleLoginGoogle = async (history, dispatch) => {
 
     if (exito) {
 
-      localStorage.removeItem('data');
+      sessionStorage.removeItem('data');
 
       alertPopUp("success", "Inicio de sesión correcto", mensaje, "animate__animated animate__bounce", "animate__animated animate__backOutDown", false, 1500);
 
@@ -58,7 +58,7 @@ export const handleLoginGoogle = async (history, dispatch) => {
     }
     else {
 
-      localStorage.setItem("data", JSON.stringify(dataStorage));
+      sessionStorage.setItem("data", JSON.stringify(dataStorage));
       history.push('/login/register-type');
       res_login =  true
     }
@@ -90,7 +90,7 @@ const setDispatch = (id, admin, history, dispatch) => {
     else history.replace('/user')
 
     localStorage.setItem('user-login', id);
-    localStorage.removeItem('data');
+    sessionStorage.removeItem('data');
 
   }, 1400);
 };

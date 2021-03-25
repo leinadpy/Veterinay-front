@@ -32,7 +32,7 @@ export const createUser = async (type, dataUser,isAdmin, direccionVeteriniaria,h
 
         data = await res.json();
 
-        localStorage.removeItem('location');
+        sessionStorage.removeItem('location');
     }
 
 
@@ -47,7 +47,7 @@ export const createUser = async (type, dataUser,isAdmin, direccionVeteriniaria,h
 const redirectUser = (type,data, history) => {
     if (data.exito) {
 
-        localStorage.removeItem('location');
+        sessionStorage.removeItem('location');
 
         alertPopUp("success", "Registro Existoso!", data.mensaje, "animate__animated animate__bounce", "animate__animated animate__backOutDown", false, 1200);
 
