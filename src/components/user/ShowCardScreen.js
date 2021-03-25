@@ -242,12 +242,12 @@ export const ShowCardScreen = ({ history }) => {
                         </div>
                     </div>
                     <div className="mb-3">
-                        <label htmlFor="exampleInputEmail1" className="form-label">Situacion</label>
+                        <label htmlFor="exampleInputEmail1" className="form-label">Situación</label>
                         <textarea
                             className="form-control"
                             id="exampleFormControlTextarea1"
                             rows="5"
-                            name="Situación:"
+                            name="situacion"
                             value={situacion}
                             onChange={handleInputChange}
                             disabled={(type === 'admin') ? true : false}
