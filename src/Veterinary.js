@@ -4,6 +4,7 @@ import { authReducer } from './auth/authReducer'
 import { AppRouter } from './routes/AppRouter'
 
 import './style.css'
+import 'dotenv'
 
 const init = () => {
      return JSON.parse(localStorage.getItem('user')) || {logged: false}
