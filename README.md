@@ -21,5 +21,5 @@ Este proyecto tiene como objetivo realizar citas a veterinarias, por lo cual exi
 * Puede aceptar o rechazar las citas que le hagan a su veterinaria; la cual debió haberse creado cuando se registró en la aplicación. También, puede modificar sus datos personales y acerca de su establecimiento, pero no borrar los datos.
 
 ## Demo de la aplicación.
-### [__veterinary-web__ 🐕‍](veterinary-web.netlify.app)
+### [__veterinary-web__ 🐕‍](https://veterinary-web.netlify.app)
 
