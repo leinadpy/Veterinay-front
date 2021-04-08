@@ -19,6 +19,6 @@ Este proyecto tiene como objetivo realizar citas a veterinarias, por lo cual exi
 ### __Usuario administrador.__
 * Puede aceptar o rechazar las citas que le hagan a su veterinaria; la cual debió haberse creado cuando se registró en la aplicación. También, puede modificar sus datos personales y acerca de su establecimiento, pero no borrar los datos.
 
-## Demo de la aplicación.
+## Demo de la aplicación en heroku.
 ### [__veterinary-web__ 🐕‍](https://veterinay-web-react.herokuapp.com)
 
