@@ -10,7 +10,6 @@ Seguido del comando:
     npm start
 ```
 
-
 ## Descripción del proyecto.
 Este proyecto tiene como objetivo realizar citas a veterinarias, por lo cual existen dos roles dentro de esta app:
 
