@@ -34,7 +34,7 @@ export const LoginScreen = ({ history }) => {
     } else {
       res_login = await handleLoginGoogle(history, dispatch);
     }
-    
+
     if (!res_login) {
       setDisabled(false)
     }

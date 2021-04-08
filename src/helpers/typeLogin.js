@@ -10,13 +10,12 @@ let res_login = false;
 export const handleLogin = async (email, password, history, dispatch) => {
 
 
-  if (!isFormValid(email, password)) return res_login;
+  if (!isFormValid(email, password)) return false;
 
 
   const res = await fetchAction(`Usuario/login/${email}&${password}`, 'POST', { email, password });
 
   const { exito, mensaje, data } = await res.json();
-
   if (exito) {
 
     alertPopUp("success", "Inicio de sesión correcto", null, "animate__animated animate__bounce", "animate__animated animate__backOutDown", false, 1500);
@@ -26,9 +25,9 @@ export const handleLogin = async (email, password, history, dispatch) => {
     res_login = true;
 
   } else {
-
+    
     alertPopUp("error", "Upps...", mensaje, "animate__animated animate__bounce", "animate__animated animate__backOutDown", true, null);
-
+    res_login = false;
   }
 
   return res_login;
@@ -65,7 +64,10 @@ export const handleLoginGoogle = async (history, dispatch) => {
 
   } catch (error) {
     
-    alertPopUp("error", "Upps...", "algo ha salido mal", "animate__animated animate__bounce", "animate__animated animate__backOutDown", true, null);
+    console.log(error)
+    if(error.code === 'auth/popup-closed-by-user'){
+      ToastPopUp('warning', 'Inicio de sesión con google cancelado')
+    }
      
   }
   
